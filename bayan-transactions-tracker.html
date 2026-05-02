@@ -1687,6 +1687,12 @@
           <div class="pt-card-head"><i class="fas fa-database" style="margin-left:8px"></i> التخزين المحلي (التطبيق بالكامل)</div>
           <div class="pt-card-body">
             <p class="pt-header-sub" style="margin:0 0 12px">تقدير لحجم البيانات المحفوظة في هذا المتصفح: معاملات، مهام، قوائم يومية، كلمات مرور، وغيرها — مقارنةً بحد تقريبي 5 ميجابايت لـ localStorage في أغلب المتصفحات.</p>
+            <p class="pt-header-sub pt-sync-explainer" style="margin:0 0 12px;padding:10px 12px;border-radius:10px;background:rgba(26,168,214,0.12);border:1px solid rgba(77,169,227,0.35);line-height:1.55;color:#dce8f9">
+              <strong>لماذا يختلف ظهور البيانات بين الكمبيوتر والموبايل؟</strong>
+              كل مكان من هنا («كروم مقابل إيدج»، أو المتصفّح مقابل الأيقونة المثبَّتة، أو الجوال) له <strong>نسخته المحلية</strong> لهذا المتصفّح وحده؛ أثناء تشغّين الموقع أيضاً تُفعَّل محاولة <strong>مزامنتها مع Firebase</strong>، فقد تأخُذ ثواني أو يبقى عند نقطة قديمة إن لم يكتمل الرفع أو الاتصال.
+              إذا مسحتم المعاملات من جهاز وفُتح الموقع من جهاز أو متصفّح آخر وفترضتم النسختين متطابقتَين: تأكدوا أن الجميع متصل؛ حدّثوا الصفحة؛ أو نظّفوا بيانات الموقع لتلك الواجهة؛ أو استخدموا «بدء عمل فعلي — مسح التجربة» من الجهاز الذي لم يتلقَّ التحديث بعد.
+              نقل كل شيء يدوياً ممكن أيضاً من <strong>تصدير JSON</strong> على مصدركم ثم <strong>استيراد JSON</strong> بالخيار «استبدال» على الآخرين.
+            </p>
             <div class="pt-storage-bar-track" aria-hidden="true"><div class="pt-storage-bar-fill" id="ptHomeStorageBar"></div></div>
             <p id="ptHomeStorageText" class="pt-storage-text">…</p>
           </div>
