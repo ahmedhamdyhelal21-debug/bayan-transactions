@@ -55,6 +55,17 @@
     }
 
     * { box-sizing: border-box; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
     ::selection {
       background: rgba(57, 169, 255, 0.35);
       color: #ffffff;
@@ -520,7 +531,8 @@
       justify-content: center;
       padding: 14px;
       background: rgba(2, 6, 23, 0.66);
-      z-index: 30;
+      /* فوق الشريط الجانبي (.pt-sidebar z-index 100) حتى تُرى نوافذ النماذج وتعمل أزرار الإغلاق */
+      z-index: 5000;
     }
     .modal.open { display: flex; }
 
@@ -1571,20 +1583,72 @@
     .pt-pwd-plain { word-break: break-all; }
     .pt-pwd-actions { display: flex; flex-wrap: wrap; gap: 6px; }
 
+    .pt-mobile-nav-toggle {
+      display: none;
+    }
+
     @media (max-width: 768px) {
-      .pt-sidebar { width: 80px; }
-      .pt-main { margin-right: 80px !important; padding: 16px 12px 24px; }
+      .pt-sidebar {
+        width: 80px;
+        transition: transform 0.28s ease, box-shadow 0.28s ease;
+      }
+      .pt-main { margin-right: 80px !important; padding: 16px 12px 24px; transition: margin 0.28s ease; }
       .pt-logo-title, .pt-logo-sub, .pt-nav-item span, .pt-nav-badge { display: none; }
       .pt-nav-item { justify-content: center; padding: 12px 10px; }
       .pt-logo-icon.pt-brand-svg { min-width: 44px; min-height: 44px; }
       .pt-logo-icon.pt-brand-svg img { width: 40px; height: 40px; max-width: 44px; max-height: 44px; filter: none; }
+
+      /* إخفاء الشريط للخارج مع إبقاء زر لفتحه من جديد */
+      .pt-layout-wrap.pt-sidebar-mobile-collapsed .pt-sidebar {
+        transform: translateX(100%);
+        pointer-events: none;
+        box-shadow: none;
+      }
+      .pt-layout-wrap.pt-sidebar-mobile-collapsed .pt-main {
+        margin-right: 0 !important;
+      }
+
+      .pt-mobile-nav-toggle {
+        display: grid;
+        place-items: center;
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top));
+        right: calc(80px + 10px);
+        z-index: 105;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        border: 1px solid rgba(152, 182, 236, 0.35);
+        border-radius: 12px;
+        background: rgba(22, 33, 62, 0.95);
+        color: #cde9ff;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+      }
+      .pt-layout-wrap.pt-sidebar-mobile-collapsed .pt-mobile-nav-toggle {
+        right: max(12px, env(safe-area-inset-right));
+      }
+      .pt-layout-wrap.pt-sidebar-mobile-collapsed .pt-mobile-nav-toggle i {
+        transform: rotate(180deg);
+      }
+      .pt-mobile-nav-toggle i {
+        transition: transform 0.26s ease;
+      }
     }
 
   </style>
 </head>
 <body>
-  <div class="pt-layout-wrap">
-    <aside class="pt-sidebar" aria-label="القائمة الرئيسية">
+  <div class="pt-layout-wrap" id="ptLayoutWrap">
+    <button type="button"
+      class="pt-mobile-nav-toggle"
+      id="ptMobileNavToggle"
+      aria-controls="ptSidebar"
+      aria-expanded="true"
+      title="إخفاء القائمة">
+      <i class="fas fa-chevron-right" aria-hidden="true"></i><span class="sr-only">تبديل القائمة الجانبية</span>
+    </button>
+    <aside class="pt-sidebar" id="ptSidebar" aria-label="القائمة الرئيسية">
       <div class="pt-logo">
         <div class="pt-logo-icon pt-brand-svg" aria-hidden="true"><img src="bayan-capital-logo.png" alt="" width="72" height="72" decoding="async" /></div>
         <div>
@@ -3801,6 +3865,20 @@
       document.querySelector('#ptPwdModal')?.addEventListener('click', (e) => {
         if (e.target.id === 'ptPwdModal') closePwdModal();
       });
+
+      const ptLayoutWrap = document.querySelector('#ptLayoutWrap');
+      const ptMobileNavToggle = document.querySelector('#ptMobileNavToggle');
+      function ptUpdateMobileSidebarToggleUi() {
+        if (!ptMobileNavToggle || !ptLayoutWrap) return;
+        const collapsed = ptLayoutWrap.classList.contains('pt-sidebar-mobile-collapsed');
+        ptMobileNavToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        ptMobileNavToggle.title = collapsed ? 'إظهار القائمة' : 'إخفاء القائمة';
+      }
+      ptMobileNavToggle?.addEventListener('click', () => {
+        ptLayoutWrap?.classList.toggle('pt-sidebar-mobile-collapsed');
+        ptUpdateMobileSidebarToggleUi();
+      });
+      ptUpdateMobileSidebarToggleUi();
     }
 
     function ptShowPage(slug, btn) {
