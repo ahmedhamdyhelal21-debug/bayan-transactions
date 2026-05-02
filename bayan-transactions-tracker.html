@@ -2628,26 +2628,63 @@
             return;
           }
           const data = snap.data() || {};
-          if (!data.state) return;
+          if (!data.state) {
+            // بدون ذلك القيمة يبقى false وكل الحفظ «محليًا فقط» ولن ترى الأجهزة الأخرى التحديث
+            cloudInitialized = true;
+            setSync('وثيقة السحابة بدون حقل الحالة؛ جاري رفع هذه النسخة للإصلاح…');
+            try {
+              await pushCloud('bootstrap_missing_state');
+            } catch (e) {
+              console.error(e);
+            }
+            return;
+          }
           const incoming = normalizeStore(data.state);
           const incomingRev = Number(incoming.meta?.revision || 0);
           const localRev = Number(state.meta?.revision || 0);
-          // إذا نسخة السحابة أحدث تمامًا نأخذ سجلّها؛ إذا نسختك المحلية أحدث (مثل مسح شامل)
-          // لا نُعيد حقن قائمة القادمة القديمة فوق فارغ محلي أو أحدث.
+          const incDt = String(incoming.meta?.updatedAt || '');
+          const locDt = String(state.meta?.updatedAt || '');
+          // المقارنة بـrevision وحدها تخرب إذا جهاز واحد له رقم أعلى «قديمًا» وفيه بيانات أقدم:
+          // نعتمد أيضًا على وقت meta.updatedAt (ISO) الذي يحدّثه كل حفظ.
           let mergedItems;
-          if (incomingRev > localRev) {
-            mergedItems = mergeItems([], incoming.payload?.items || []);
-          } else if (incomingRev < localRev) {
-            mergedItems = mergeItems([], state.payload?.items || []);
+          let metaSource;
+          let nextUpdatedAt;
+          if (!incDt || !locDt) {
+            if (incomingRev > localRev) {
+              mergedItems = mergeItems([], incoming.payload?.items || []);
+              metaSource = incoming.meta?.source || 'cloud_merge';
+              nextUpdatedAt = incDt || now();
+            } else if (incomingRev < localRev) {
+              mergedItems = mergeItems([], state.payload?.items || []);
+              metaSource = state.meta?.source || 'local';
+              nextUpdatedAt = locDt || now();
+            } else {
+              mergedItems = mergeItems(state.payload?.items || [], incoming.payload?.items || []);
+              metaSource = 'cloud_merge';
+              nextUpdatedAt = now();
+            }
           } else {
-            mergedItems = mergeItems(state.payload?.items || [], incoming.payload?.items || []);
+            const cmp = incDt.localeCompare(locDt);
+            if (cmp > 0 || (cmp === 0 && incomingRev > localRev)) {
+              mergedItems = mergeItems([], incoming.payload?.items || []);
+              metaSource = incoming.meta?.source || 'cloud_merge';
+              nextUpdatedAt = incDt;
+            } else if (cmp < 0 || (cmp === 0 && incomingRev < localRev)) {
+              mergedItems = mergeItems([], state.payload?.items || []);
+              metaSource = state.meta?.source || 'local';
+              nextUpdatedAt = locDt;
+            } else {
+              mergedItems = mergeItems(state.payload?.items || [], incoming.payload?.items || []);
+              metaSource = 'cloud_merge';
+              nextUpdatedAt = incDt;
+            }
           }
           const nextRev = Math.max(localRev, incomingRev);
           const mergedStore = {
             schema: SCHEMA,
             meta: {
-              updatedAt: now(),
-              source: incomingRev >= localRev ? (incoming.meta?.source || 'cloud_merge') : (state.meta?.source || 'local'),
+              updatedAt: nextUpdatedAt || now(),
+              source: metaSource || 'cloud_merge',
               revision: nextRev === 0 ? 1 : nextRev
             },
             payload: { items: mergedItems }
