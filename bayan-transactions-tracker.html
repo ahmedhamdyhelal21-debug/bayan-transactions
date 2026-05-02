@@ -2558,8 +2558,12 @@
       ) {
         return;
       }
-      if (String(prompt('لتأكيد الحذف اكتب بالضبط: بدء', '') || '').trim() !== 'بدء') {
-        alert('تم الإلغاء.');
+      // تأكيد ثان بسيط (بدون كتابة نص عربي حتى لا يبدو «لم يمسح شيئًا» لو أُلغي الـ prompt)
+      if (
+        !confirm(
+          '🚨 تأكيد نهائي: سيتم المسح فورًا من هذا الجهاز ومن السحابة لهذا الحساب. هل أنت متأكد بالتأكيد؟'
+        )
+      ) {
         return;
       }
       undoSnapshot = null;
@@ -2620,13 +2624,25 @@
           const data = snap.data() || {};
           if (!data.state) return;
           const incoming = normalizeStore(data.state);
-          const mergedItems = mergeItems(state.payload?.items || [], incoming.payload?.items || []);
+          const incomingRev = Number(incoming.meta?.revision || 0);
+          const localRev = Number(state.meta?.revision || 0);
+          // إذا نسخة السحابة أحدث تمامًا نأخذ سجلّها؛ إذا نسختك المحلية أحدث (مثل مسح شامل)
+          // لا نُعيد حقن قائمة القادمة القديمة فوق فارغ محلي أو أحدث.
+          let mergedItems;
+          if (incomingRev > localRev) {
+            mergedItems = mergeItems([], incoming.payload?.items || []);
+          } else if (incomingRev < localRev) {
+            mergedItems = mergeItems([], state.payload?.items || []);
+          } else {
+            mergedItems = mergeItems(state.payload?.items || [], incoming.payload?.items || []);
+          }
+          const nextRev = Math.max(localRev, incomingRev);
           const mergedStore = {
             schema: SCHEMA,
             meta: {
               updatedAt: now(),
-              source: 'cloud_merge',
-              revision: Math.max(Number(state.meta?.revision || 1), Number(incoming.meta?.revision || 1)) + 1
+              source: incomingRev >= localRev ? (incoming.meta?.source || 'cloud_merge') : (state.meta?.source || 'local'),
+              revision: nextRev === 0 ? 1 : nextRev
             },
             payload: { items: mergedItems }
           };
