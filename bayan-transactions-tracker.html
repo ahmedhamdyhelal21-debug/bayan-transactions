@@ -1,0 +1,4760 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1630">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Personal Tracker">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="bayan-capital-logo.png">
+  <title>Personal Tracker Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <style>
+    :root {
+      --bg: #0a1020;
+      --surface: #121a31e8;
+      --surface-2: #17213be8;
+      --text: #f4f7ff;
+      --muted: #aeb9d2;
+      --line: #2b3a63;
+      --brand: #1fa3d8;
+      --brand-soft: #173a67;
+      --brand-gold: #dbbb72;
+      --brand-gold-soft: #f4dfb4;
+      --accent-violet: #6f78d9;
+      --accent-cyan: #3ec9e7;
+      --ok: #21c989;
+      --warn: #f4b73d;
+      --danger: #ff6b7f;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 18px 42px rgba(4, 10, 24, 0.42);
+      --shadow-soft: 0 8px 18px rgba(4, 10, 24, 0.28);
+    }
+
+    body.dark {
+      --bg: #0b1220;
+      --surface: #111b2f;
+      --surface-2: #0f1729;
+      --text: #e2e8f0;
+      --muted: #93a4be;
+      --line: #22314f;
+      --brand: #60a5fa;
+      --brand-soft: #152a46;
+      --ok: #34d399;
+      --warn: #f59e0b;
+      --danger: #f87171;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; }
+    ::selection {
+      background: rgba(57, 169, 255, 0.35);
+      color: #ffffff;
+    }
+    body {
+      margin: 0;
+      font-family: "Cairo", Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 4%, rgba(40, 98, 182, 0.23) 0%, transparent 35%),
+        radial-gradient(circle at 92% 0%, rgba(26, 168, 214, 0.2) 0%, transparent 36%),
+        linear-gradient(180deg, #0a1020 0%, #0c1325 55%, #0a1121 100%);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 14px 16px 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, rgba(20, 30, 57, 0.95), rgba(15, 23, 45, 0.95));
+      border: 1px solid #334874;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      align-items: start;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar::before {
+      content: "";
+      position: absolute;
+      inset: auto auto -50px -50px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(88, 170, 255, 0.2), transparent 65%);
+      pointer-events: none;
+    }
+    .topbar::after {
+      content: "";
+      position: absolute;
+      left: 30%;
+      right: -10%;
+      top: -80px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 66%);
+      pointer-events: none;
+    }
+
+    .topbar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 2px;
+    }
+
+    .brand-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 12px;
+      object-fit: cover;
+      object-position: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(151, 187, 255, 0.35);
+      padding: 2px;
+    }
+
+    .brand-name {
+      color: var(--brand-gold);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-emblem {
+      min-height: 28px;
+      padding: 0 9px;
+      border-radius: 999px;
+      border: 1px solid #496088;
+      background: linear-gradient(135deg, #214a78, #203d66);
+      color: var(--brand-gold-soft);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(1.2rem, 2.4vw, 1.9rem);
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 1px 0 0;
+      color: #b9c5dd;
+      font-size: 0.86rem;
+    }
+
+    .date-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid #455a87;
+      background: linear-gradient(135deg, #243d6f, #1f315a);
+      color: #d7ebff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .date-chip .icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #3e5ca1, #3467c2);
+      font-size: 0.74rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: flex-start;
+    }
+
+    .btn, .input, .select {
+      min-height: 36px;
+      border-radius: 999px;
+      border: 1px solid #3a4e7a;
+      background: linear-gradient(180deg, #1a2747, #16213b);
+      color: var(--text);
+      padding: 0 12px;
+      font: inherit;
+      transition: 180ms ease;
+      font-size: 0.82rem;
+    }
+
+    .btn {
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-soft);
+      border-color: #6181bc;
+    }
+
+    .btn.primary {
+      border: none;
+      background: linear-gradient(135deg, #207fbc, #36b9de);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(8, 68, 96, 0.42);
+    }
+
+    .btn.soft {
+      background: linear-gradient(135deg, #2f4d7b, #284265);
+      color: var(--brand-gold-soft);
+      border-color: transparent;
+    }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      background: linear-gradient(160deg, rgba(21, 33, 64, 0.98), rgba(16, 26, 50, 0.98));
+      border: 1px solid #364a78;
+      border-radius: var(--radius);
+      box-shadow: 0 14px 26px rgba(4, 12, 24, 0.35);
+      padding: 10px 12px;
+      position: relative;
+      backdrop-filter: blur(8px);
+      transition: 200ms ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #5a76ae;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-gold), #82d3ea);
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+
+    .kpi-label {
+      color: #afbdd8;
+      font-size: 0.84rem;
+    }
+
+    .kpi-value {
+      margin-top: 2px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(17, 27, 54, 0.98), rgba(13, 21, 42, 0.99));
+      border: 1px solid #32456f;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .panel-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      background: linear-gradient(180deg, #223b6a, #1c3158);
+      font-weight: 800;
+    }
+
+    .filters {
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1.7fr repeat(5, minmax(120px, 1fr));
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-top: 1px solid #2f426c;
+      scrollbar-width: thin;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1150px;
+    }
+
+    th, td {
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      vertical-align: top;
+      font-size: 0.82rem;
+    }
+
+    th {
+      background: linear-gradient(180deg, #263f70, #1f335c);
+      color: #e4edff;
+      font-size: 0.76rem;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tbody tr {
+      transition: background-color 150ms ease;
+    }
+    tbody tr:hover {
+      background: rgba(67, 92, 146, 0.24);
+    }
+
+    .case-title { font-weight: 700; margin-bottom: 4px; }
+    .tiny { color: var(--muted); font-size: 0.72rem; }
+
+    .badge {
+      display: inline-flex;
+      min-height: 26px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .s-running { background: #e0ecff; color: #2457b8; border-color: #b8d4ff; }
+    .s-waiting { background: #fff0d8; color: #8a5600; border-color: #ffdba0; }
+    .s-missing { background: #ffe2e2; color: #a61f1f; border-color: #ffb7b7; }
+    .s-done { background: #dcfce7; color: #116843; border-color: #a7efc5; }
+
+    .pri {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-left: 7px;
+    }
+    .p-high { background: var(--danger); }
+    .p-mid { background: var(--warn); }
+    .p-low { background: var(--ok); }
+
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .mini {
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #27457f, #21386a);
+      color: var(--text);
+      border-radius: 999px;
+      min-height: 26px;
+      padding: 0 8px;
+      font-size: 0.69rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 150ms ease;
+    }
+    .mini:hover {
+      transform: translateY(-1px);
+      border-color: #5b79af;
+    }
+
+    .mini.danger {
+      border-color: #f5b7b7;
+      color: var(--danger);
+      background: #fff3f3;
+    }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .statusline {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      font-size: 0.74rem;
+      color: var(--muted);
+      background: linear-gradient(180deg, #1f3763, #1a2f54);
+      border-top: 1px solid var(--line);
+    }
+
+    .mobile-cards {
+      display: none;
+      padding: 10px;
+      gap: 10px;
+      background: linear-gradient(180deg, #121d36, #0f182d);
+    }
+
+    .m-card {
+      border: 1px solid #3d5487;
+      border-radius: 14px;
+      padding: 10px;
+      background: linear-gradient(160deg, #1f3567, #182a52);
+      box-shadow: 0 8px 20px rgba(3, 12, 28, 0.34);
+      animation: cardIn 220ms ease;
+      transition: 160ms ease;
+    }
+    .m-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .m-card__title {
+      margin: 0;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .m-card__meta {
+      margin: 3px 0 8px;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .m-card__row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .fab {
+      position: fixed;
+      left: 16px;
+      bottom: 78px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--brand), var(--accent-violet));
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      box-shadow: 0 14px 28px rgba(40, 84, 240, 0.38);
+      z-index: 24;
+      display: none;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      right: 10px;
+      left: 10px;
+      bottom: 10px;
+      border: 1px solid #3f5484;
+      border-radius: 18px;
+      background: rgba(19, 30, 58, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(19, 30, 58, 0.14);
+      display: none;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: 6px;
+      z-index: 25;
+    }
+
+    .bottom-nav button {
+      border: 0;
+      border-radius: 10px;
+      min-height: 42px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .bottom-nav button.is-active {
+      background: linear-gradient(135deg, #29508d, #246ca3);
+      color: #cde9ff;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      background: rgba(2, 6, 23, 0.66);
+      z-index: 30;
+    }
+    .modal.open { display: flex; }
+
+    .dialog {
+      width: min(900px, 100%);
+      max-height: 92vh;
+      overflow: auto;
+      background: linear-gradient(180deg, rgba(18, 30, 58, 0.98), rgba(14, 23, 44, 0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .dialog-head {
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .form-grid {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .field { display: grid; gap: 4px; }
+    .field label { font-size: 0.8rem; color: var(--muted); font-weight: 700; }
+    .field-wide { grid-column: 1 / -1; }
+    .field small { color: var(--muted); font-size: 0.75rem; }
+
+    .field input, .field select, .field textarea {
+      min-height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: #172544;
+      color: var(--text);
+      padding: 8px;
+      font: inherit;
+    }
+
+    .actions-editor {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .actions-editor__head {
+      padding: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+
+    .actions-editor__table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 0;
+    }
+
+    .actions-editor__table th,
+    .actions-editor__table td {
+      border-bottom: 1px solid var(--line);
+      padding: 6px;
+      text-align: right;
+      font-size: 0.8rem;
+    }
+
+    .actions-editor__table input,
+    .actions-editor__table select {
+      min-height: 34px;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 4px 6px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+    }
+
+    .dialog-actions {
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    .stage-viewer-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .stage-viewer-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(26, 40, 73, 0.52);
+    }
+    .stage-viewer-item.active {
+      border-color: #8cb4ff;
+      box-shadow: 0 0 0 1px rgba(140, 180, 255, 0.45) inset;
+    }
+    .stage-viewer-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .stage-viewer-text {
+      font-size: 0.86rem;
+      color: #d7e5ff;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .stage-meta-grid {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 4px 10px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+    }
+    .stage-meta-grid .k {
+      color: #9fb2d6;
+      font-weight: 700;
+    }
+    .stage-meta-grid .v {
+      color: #e9f0ff;
+    }
+
+    .hidden { display: none; }
+    .input:focus, .select:focus, .btn:focus, .mini:focus,
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: 2px solid rgba(78, 171, 220, 0.5);
+      outline-offset: 1px;
+      border-color: #4fa4d0;
+    }
+
+    /* Glass redesign override */
+    body {
+      background:
+        radial-gradient(circle at 8% 0%, rgba(67, 158, 218, 0.26) 0%, transparent 32%),
+        radial-gradient(circle at 96% 2%, rgba(225, 188, 109, 0.2) 0%, transparent 30%),
+        radial-gradient(circle at 80% 90%, rgba(101, 108, 230, 0.22) 0%, transparent 40%),
+        linear-gradient(165deg, #0a1022 0%, #0d1630 50%, #0a1228 100%);
+      color: #edf4ff;
+    }
+    .topbar,
+    .panel,
+    .grid-cards .card,
+    .dialog,
+    .bottom-nav {
+      background: linear-gradient(135deg, rgba(21, 34, 67, 0.62), rgba(16, 26, 54, 0.54));
+      border: 1px solid rgba(151, 187, 255, 0.24);
+      box-shadow: 0 16px 34px rgba(4, 8, 21, 0.34);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .panel-head,
+    th,
+    .statusline,
+    .dialog-head,
+    .actions-editor__head {
+      background: linear-gradient(180deg, rgba(61, 95, 163, 0.52), rgba(45, 72, 126, 0.46));
+      color: #deecff;
+      border-color: rgba(159, 192, 255, 0.26);
+    }
+    .title { color: #f2f7ff; }
+    .subtitle { color: #b5c6e6; }
+    .brand-name { color: var(--brand-gold); }
+    .brand-emblem {
+      border-color: rgba(221, 197, 141, 0.45);
+      background: linear-gradient(135deg, rgba(68, 87, 136, 0.78), rgba(51, 66, 108, 0.7));
+      color: var(--brand-gold-soft);
+    }
+    .date-chip {
+      border-color: rgba(149, 180, 238, 0.35);
+      background: linear-gradient(135deg, rgba(44, 66, 118, 0.74), rgba(33, 53, 98, 0.7));
+      color: #dceaff;
+    }
+    .date-chip .icon {
+      background: linear-gradient(135deg, rgba(86, 121, 193, 0.85), rgba(56, 92, 168, 0.82));
+      color: #fff;
+    }
+    .btn, .input, .select,
+    .field input, .field select, .field textarea,
+    .actions-editor, .actions-editor__table input, .actions-editor__table select {
+      border: 1px solid rgba(152, 182, 236, 0.26);
+      background: linear-gradient(180deg, rgba(34, 51, 94, 0.64), rgba(27, 41, 76, 0.56));
+      color: #eaf3ff;
+    }
+    .btn:hover, .mini:hover {
+      border-color: rgba(173, 203, 255, 0.56);
+      box-shadow: 0 8px 20px rgba(6, 14, 34, 0.34);
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, #2e92c8, #54c6e7);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(24, 129, 176, 0.36);
+      border: none;
+    }
+    .btn.soft {
+      background: linear-gradient(135deg, rgba(214, 177, 97, 0.34), rgba(173, 132, 60, 0.24));
+      color: #ffe7b4;
+      border-color: rgba(216, 190, 129, 0.46);
+    }
+    .kpi-label { color: #bfd0ee; }
+    .kpi-value { color: #f5f9ff; }
+    .filters {
+      background: linear-gradient(180deg, rgba(25, 39, 74, 0.52), rgba(20, 32, 64, 0.48));
+      border-bottom: 1px solid rgba(150, 183, 244, 0.18);
+    }
+    th, td {
+      border-bottom-color: rgba(151, 178, 228, 0.18);
+      color: #dce8fd;
+    }
+    tbody tr:hover {
+      background: rgba(104, 147, 230, 0.18);
+    }
+    .tiny { color: #a9bcdf; }
+    .mini {
+      background: linear-gradient(135deg, rgba(55, 84, 146, 0.78), rgba(41, 64, 116, 0.76));
+      color: #eaf3ff;
+      border-color: rgba(152, 182, 236, 0.28);
+    }
+    .mini.danger {
+      background: rgba(150, 56, 72, 0.25);
+      border-color: rgba(242, 158, 170, 0.6);
+      color: #ffd0d7;
+    }
+    .modal {
+      background: rgba(6, 10, 24, 0.6);
+    }
+    .field label { color: #b9c9e8; }
+    .input::placeholder,
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: #95abc9;
+    }
+
+    /* Unified theme system: full light + full dark */
+    :root {
+      --bg-page: #eef3fb;
+      --bg-panel: #ffffff;
+      --bg-subtle: #f3f8ff;
+      --text-main: #0b1a33;
+      --text-muted: #52627d;
+      --line-soft: #cfdaea;
+      --input-bg: #ffffff;
+      --input-line: #c3d3ea;
+      --btn-secondary-bg: #e8f0ff;
+      --btn-secondary-text: #1d3f8f;
+      --btn-secondary-line: #b9cced;
+      --btn-danger-bg: #fff1f1;
+      --btn-danger-text: #b42323;
+      --btn-danger-line: #f7c7c7;
+      --row-hover: #eef5ff;
+      --shadow-theme: 0 10px 26px rgba(22, 40, 72, 0.09);
+    }
+    body.dark {
+      --bg-page: #0b1220;
+      --bg-panel: #0f172a;
+      --bg-subtle: #111d33;
+      --text-main: #e2e8f0;
+      --text-muted: #93a4be;
+      --line-soft: #22314f;
+      --input-bg: #111f36;
+      --input-line: #2f446c;
+      --btn-secondary-bg: #1a2a49;
+      --btn-secondary-text: #dbe7ff;
+      --btn-secondary-line: #324e81;
+      --btn-danger-bg: #3c1f2a;
+      --btn-danger-text: #ffd0d7;
+      --btn-danger-line: #6d3447;
+      --row-hover: #14233f;
+      --shadow-theme: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+    body {
+      background: linear-gradient(180deg, var(--bg-page) 0%, var(--bg-page) 100%) !important;
+      color: var(--text-main) !important;
+    }
+    .topbar,
+    .panel,
+    .grid-cards .card,
+    .dialog,
+    .bottom-nav {
+      background: var(--bg-panel) !important;
+      border: 1px solid var(--line-soft) !important;
+      box-shadow: var(--shadow-theme) !important;
+      backdrop-filter: none !important;
+    }
+    .panel-head,
+    th,
+    .statusline,
+    .dialog-head,
+    .actions-editor__head {
+      background: var(--bg-subtle) !important;
+      color: var(--text-main) !important;
+      border-color: var(--line-soft) !important;
+    }
+    .title { color: var(--text-main) !important; }
+    .subtitle { color: var(--text-muted) !important; }
+    .date-chip { background: var(--bg-subtle) !important; border-color: var(--line-soft) !important; color: var(--text-main) !important; }
+    .date-chip .icon { background: var(--btn-secondary-bg) !important; color: var(--btn-secondary-text) !important; }
+    .btn, .input, .select,
+    .field input, .field select, .field textarea,
+    .actions-editor, .actions-editor__table input, .actions-editor__table select {
+      background: var(--input-bg) !important;
+      color: var(--text-main) !important;
+      border: 1px solid var(--input-line) !important;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+      color: #ffffff !important;
+      border: none !important;
+    }
+    body:not(.dark) .btn.primary {
+      background: linear-gradient(135deg, #1f5ed8, #2f7cf4) !important;
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2) !important;
+    }
+    .btn.soft,
+    .mini {
+      background: var(--btn-secondary-bg) !important;
+      color: var(--btn-secondary-text) !important;
+      border-color: var(--btn-secondary-line) !important;
+    }
+    .mini.danger {
+      background: var(--btn-danger-bg) !important;
+      color: var(--btn-danger-text) !important;
+      border-color: var(--btn-danger-line) !important;
+    }
+    .kpi-label, .tiny, #resultsInfo, #syncInfo, #ptHomeStorageText { color: var(--text-muted) !important; }
+    .kpi-value { color: var(--text-main) !important; }
+    th, td { color: var(--text-main) !important; border-bottom-color: var(--line-soft) !important; }
+    tbody tr:hover { background: var(--row-hover) !important; }
+    .filters { background: var(--bg-subtle) !important; border-bottom: 1px solid var(--line-soft) !important; }
+    .brand-logo { background: var(--bg-panel) !important; border-color: var(--line-soft) !important; }
+    body:not(.dark) .topbar {
+      background: linear-gradient(135deg, #f6faff, #edf4ff) !important;
+    }
+    body:not(.dark) .panel-head,
+    body:not(.dark) th {
+      background: #edf4ff !important;
+    }
+
+    @media (max-width: 1080px) {
+      .grid-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .filters { grid-template-columns: 1fr 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .brand-logo { width: 52px; height: 52px; }
+      .title { font-size: 1.05rem; }
+      .subtitle { font-size: 0.74rem; }
+      .grid-cards { grid-template-columns: 1fr 1fr; }
+      .topbar { grid-template-columns: 1fr; }
+      .topbar-head { flex-direction: column; }
+      .filters { grid-template-columns: 1fr; }
+      .toolbar { display: none; }
+      .table-wrap { display: none; }
+      .mobile-cards { display: grid; }
+      .fab { display: inline-grid; place-items: center; }
+      .bottom-nav { display: grid; }
+      .app { padding-bottom: 84px; }
+    }
+
+    /* TaskFlow-like shell (sidebar + extra pages) */
+    .pt-layout-wrap { min-height: 100vh; }
+    .pt-sidebar {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      z-index: 100;
+      overflow-y: auto;
+      font-family: 'Tajawal', 'Cairo', sans-serif;
+      background: linear-gradient(180deg, #16213e 0%, #1a1a2e 100%);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.25);
+    }
+    .pt-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .pt-logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 1.25rem;
+      color: #fff;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #1a5f7a, #2a8faa);
+      box-shadow: 0 4px 15px rgba(26, 95, 122, 0.4);
+    }
+    .pt-logo-title { font-size: 1.15rem; font-weight: 800; color: #e0e6ed; }
+    .pt-logo-sub { font-size: 0.72rem; color: #8b9bb4; margin-top: 2px; }
+    .pt-nav-menu { padding: 16px 12px 24px; display: flex; flex-direction: column; gap: 6px; }
+    .pt-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: right;
+      padding: 13px 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #8b9bb4;
+      background: transparent;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .pt-nav-item::before {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: #1a5f7a;
+      border-radius: 0 4px 4px 0;
+      transform: scaleY(0);
+      transition: transform 0.2s ease;
+    }
+    .pt-nav-item:hover,
+    .pt-nav-item.is-active {
+      background: rgba(26, 95, 122, 0.18);
+      color: #e0e6ed;
+    }
+    .pt-nav-item.is-active::before { transform: scaleY(1); }
+    .pt-nav-item i { width: 22px; text-align: center; font-size: 1.05rem; }
+    .pt-nav-badge {
+      margin-right: auto;
+      background: #c84b31;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 9px;
+      border-radius: 20px;
+      min-width: 22px;
+      text-align: center;
+    }
+    .pt-main {
+      position: relative;
+      z-index: 2;
+      margin-right: 280px !important;
+      min-height: 100vh;
+      padding: 24px 22px 32px;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    .pt-page { display: none; }
+    .pt-page.is-active { display: block; animation: ptPageIn 0.35s ease; }
+    @keyframes ptPageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .pt-main > .pt-page > .app {
+      max-width: 100%;
+      margin: 0;
+      padding: 12px 0 20px;
+    }
+    .pt-surface {
+      font-family: 'Tajawal', 'Cairo', sans-serif;
+      color: #e0e6ed;
+    }
+    .pt-header { margin-bottom: 22px; }
+    .pt-header-title {
+      margin: 0;
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #e0e6ed;
+      line-height: 1.35;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+    .pt-header-sub { margin: 8px 0 0; font-size: 0.88rem; color: #8b9bb4; }
+    .pt-daily-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) { .pt-daily-grid { grid-template-columns: 1fr; } }
+    .pt-daily-quick-block { margin-top: 22px; }
+    .pt-task-page-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .pt-task-head-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .pt-task-search-wrap {
+      position: relative;
+      min-width: 220px;
+      flex: 1;
+      max-width: 360px;
+    }
+    .pt-task-search-wrap i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8b9bb4;
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .pt-task-search {
+      width: 100%;
+      padding: 12px 16px 12px 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #0f1419;
+      color: #e0e6ed;
+      font-family: inherit;
+      font-size: 0.88rem;
+    }
+    .pt-task-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+    .pt-filter-btn {
+      padding: 9px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #252a40;
+      color: #8b9bb4;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .pt-filter-btn:hover,
+    .pt-filter-btn.is-active {
+      background: linear-gradient(135deg, #1a5f7a, #2a8faa);
+      color: #fff;
+      border-color: transparent;
+    }
+    .pt-task-table-scroll { overflow-x: auto; }
+    .pt-task-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 720px; }
+    .pt-task-table th, .pt-task-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: right;
+      vertical-align: middle;
+    }
+    .pt-task-table th { color: #8b9bb4; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .pt-task-table tr:hover td { background: rgba(255, 255, 255, 0.03); }
+    .pt-pri-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-left: 8px; vertical-align: middle; }
+    .pt-pri-dot.high { background: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.45); }
+    .pt-pri-dot.mid { background: #eab308; box-shadow: 0 0 8px rgba(234, 179, 8, 0.4); }
+    .pt-pri-dot.low { background: #22c55e; box-shadow: 0 0 8px rgba(34, 197, 94, 0.35); }
+    .pt-st-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .pt-st-badge.wait { background: rgba(249, 168, 37, 0.18); color: #f9a825; }
+    .pt-st-badge.run { background: rgba(2, 136, 209, 0.2); color: #38bdf8; }
+    .pt-st-badge.done { background: rgba(34, 197, 94, 0.18); color: #4ade80; }
+    .pt-prog-wrap { min-width: 100px; }
+    .pt-prog-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: #0f1419;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .pt-prog-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #1a5f7a, #2a8faa); transition: width 0.3s ease; }
+    .pt-prog-fill.orange { background: linear-gradient(90deg, #ea580c, #f97316); }
+    .pt-prog-fill.green { background: linear-gradient(90deg, #15803d, #22c55e); }
+    .pt-prog-pct { font-size: 0.72rem; color: #8b9bb4; margin-top: 4px; }
+    .pt-st-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .pt-st-act {
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+      font-size: 0.85rem;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .pt-st-act:hover { transform: scale(1.06); filter: brightness(1.1); }
+    .pt-st-act.edit { background: #0288d1; }
+    .pt-st-act.del { background: #d32f2f; }
+    .pt-card.tf-card {
+      background: #252a40;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .pt-card-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #e0e6ed;
+    }
+    .pt-card-body { padding: 16px 18px 18px; }
+    .pt-table-mini { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    .pt-table-mini th, .pt-table-mini td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: right;
+      color: #e0e6ed;
+    }
+    .pt-table-mini th { color: #8b9bb4; font-weight: 600; font-size: 0.74rem; }
+    .pt-quick-add { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .pt-input {
+      flex: 1;
+      min-width: 160px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #0f1419;
+      color: #e0e6ed;
+      font-family: inherit;
+      font-size: 0.88rem;
+    }
+    .pt-btn-primary {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.86rem;
+      color: #fff;
+      background: linear-gradient(135deg, #1a5f7a, #2a8faa);
+      box-shadow: 0 4px 14px rgba(26, 95, 122, 0.35);
+    }
+    .pt-btn-secondary {
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(42, 143, 170, 0.55);
+      background: rgba(26, 95, 122, 0.2);
+      color: #c5e7f0;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .pt-btn-secondary:hover {
+      background: rgba(26, 95, 122, 0.35);
+      border-color: rgba(42, 143, 170, 0.85);
+    }
+    .pt-daily-save-hint {
+      margin: 0 0 12px;
+      font-size: 0.78rem;
+      color: #8b9bb4;
+      line-height: 1.5;
+    }
+    .pt-todo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .pt-todo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #0f1419;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.88rem;
+    }
+    .pt-todo-row.done { opacity: 0.55; text-decoration: line-through; }
+    .pt-todo-row button.pt-todo-del {
+      margin-right: auto;
+      border: none;
+      background: rgba(211, 47, 47, 0.25);
+      color: #ffcdd2;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .pt-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    @media (max-width: 1100px) { .pt-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .pt-stat-card {
+      background: #252a40;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .pt-stat-card .pt-stat-val { font-size: 1.75rem; font-weight: 800; color: #e0e6ed; }
+    .pt-stat-card .pt-stat-lbl { font-size: 0.82rem; color: #8b9bb4; margin-top: 6px; }
+    .pt-dash-split { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+    @media (max-width: 980px) { .pt-dash-split { grid-template-columns: 1fr; } }
+    .pt-chart-caption {
+      margin: 0 0 14px;
+      font-size: 0.78rem;
+      color: #8b9bb4;
+      line-height: 1.45;
+    }
+    .pt-chart-panel {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      min-height: 260px;
+      padding: 8px 4px 4px;
+    }
+    .pt-chart-y {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      width: 34px;
+      padding-bottom: 36px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #6b7a95;
+      text-align: left;
+      direction: ltr;
+    }
+    .pt-chart-plot {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      border-radius: 14px;
+      background:
+        linear-gradient(0deg, rgba(26, 95, 122, 0.12) 1px, transparent 1px) 0 0 / 100% 25%,
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px) 0 0 / 24px 100%,
+        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(26, 95, 122, 0.15), transparent 70%);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      overflow: hidden;
+    }
+    .pt-chart-bars {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 18px 10px 0;
+      min-height: 200px;
+    }
+    .pt-chart-col {
+      flex: 1;
+      min-width: 0;
+      max-width: 48px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      height: 100%;
+    }
+    .pt-chart-val {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #c5d0e0;
+      min-height: 1.1em;
+      line-height: 1;
+    }
+    .pt-chart-bar {
+      width: 100%;
+      max-width: 26px;
+      border-radius: 10px 10px 4px 4px;
+      min-height: 4px;
+      background: linear-gradient(180deg, #2dd4bf 0%, #0d9488 38%, #134e4a 100%);
+      box-shadow:
+        0 0 20px rgba(45, 212, 191, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+    .pt-chart-col:hover .pt-chart-bar {
+      transform: scaleY(1.02);
+      filter: brightness(1.08);
+      box-shadow:
+        0 0 28px rgba(45, 212, 191, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .pt-chart-col.pt-chart-zero .pt-chart-bar {
+      background: linear-gradient(180deg, rgba(100, 116, 139, 0.35), rgba(51, 65, 85, 0.25));
+      box-shadow: none;
+    }
+    .pt-chart-mon {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #8b9bb4;
+      text-align: center;
+      line-height: 1.15;
+      padding: 0 2px 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+    .pt-chart-baseline {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(139, 155, 180, 0.35), transparent);
+      margin: 0 8px;
+    }
+    .pt-act-mini { display: flex; flex-direction: column; gap: 10px; }
+    .pt-act-row {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #0f1419;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.84rem;
+    }
+    .pt-act-row strong { display: block; color: #e0e6ed; margin-bottom: 4px; }
+    .pt-cal-toolbar { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+    .pt-cal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .pt-cal-label-block { flex: 1; text-align: center; min-width: 140px; }
+    .pt-cal-label-block strong { display: block; font-size: 1.05rem; color: #e8eef7; }
+    .pt-cal-hj-line { display: block; font-size: 0.78rem; color: #c9a227; font-weight: 600; margin-top: 4px; }
+    .pt-cal-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .pt-cal-filter-lbl { font-size: 0.8rem; color: #8b9bb4; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .pt-cal-month { width: auto; min-width: 150px; padding: 8px 10px; font-size: 0.85rem; }
+    .pt-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+    @media (min-width: 900px) { .pt-cal-grid { gap: 8px; } }
+    .pt-cal-h { text-align: center; font-size: 0.72rem; color: #8b9bb4; padding: 8px 0; font-weight: 700; }
+    .pt-cal-day {
+      aspect-ratio: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: 6px 4px 5px;
+      border-radius: 12px;
+      background: #0f1419;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e0e6ed;
+      font: inherit;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+    }
+    .pt-cal-day:hover { border-color: rgba(42, 143, 170, 0.55); transform: translateY(-1px); }
+    .pt-cal-day:focus-visible { outline: 2px solid #2dd4bf; outline-offset: 2px; }
+    .pt-cal-day.today { background: linear-gradient(160deg, #1a5f7a, #0f3550); color: #fff; border-color: #2a8faa; }
+    .pt-cal-day.is-selected { box-shadow: 0 0 0 2px #f9a825, inset 0 0 0 1px rgba(249, 168, 37, 0.35); }
+    .pt-cal-day.has-activity { border-color: rgba(249, 168, 37, 0.35); }
+    .pt-cal-gh { font-size: 0.92rem; font-weight: 800; line-height: 1.1; }
+    .pt-cal-hj { font-size: 0.62rem; color: #9aacbf; font-weight: 600; margin-top: 2px; line-height: 1.1; }
+    .pt-cal-day.today .pt-cal-hj { color: rgba(255, 255, 255, 0.75); }
+    .pt-cal-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+    .pt-cal-ic {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.58rem;
+      color: #7dd3fc;
+      background: rgba(14, 165, 233, 0.12);
+      border-radius: 6px;
+      padding: 2px 4px;
+      line-height: 1;
+    }
+    .pt-cal-ic i { font-size: 0.62rem; }
+    .pt-cal-ic small { font-weight: 800; font-size: 0.58rem; }
+    .pt-cal-ic.pt-cal-ic-case { color: #fdba74; background: rgba(251, 146, 60, 0.12); }
+    .pt-cal-ic.pt-cal-ic-task { color: #c4b5fd; background: rgba(139, 92, 246, 0.15); }
+    .pt-cal-ic.pt-cal-ic-daily { color: #86efac; background: rgba(34, 197, 94, 0.12); }
+    .pt-cal-ic.pt-cal-ic-quick { color: #fde047; background: rgba(234, 179, 8, 0.12); }
+    .pt-cal-day-panel {
+      margin-top: 16px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      background: #12161d;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: none;
+    }
+    .pt-cal-day-panel.is-open { display: block; }
+    .pt-cal-day-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .pt-cal-day-panel-head strong { font-size: 0.95rem; color: #e8eef7; line-height: 1.4; }
+    .pt-cal-panel-close {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #e0e6ed;
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+    .pt-cal-panel-close:hover { background: rgba(255, 255, 255, 0.12); }
+    .pt-cal-panel-sec { margin-bottom: 14px; }
+    .pt-cal-panel-sec:last-child { margin-bottom: 0; }
+    .pt-cal-panel-sec h4 { margin: 0 0 8px; font-size: 0.78rem; color: #8b9bb4; font-weight: 700; }
+    .pt-cal-panel-row {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #0f1419;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pt-cal-panel-row:last-child { margin-bottom: 0; }
+    .pt-cal-panel-row span { color: #cfd8e3; line-height: 1.4; }
+    .pt-cal-panel-row .pt-mini { font-size: 0.72rem; color: #8b9bb4; margin-top: 4px; display: block; }
+    .pt-report-bar { margin-bottom: 12px; }
+    .pt-report-bar .pt-rb-top { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 6px; color: #e0e6ed; }
+    .pt-report-bar .pt-rb-track { height: 8px; border-radius: 999px; background: #0f1419; overflow: hidden; }
+    .pt-report-bar .pt-rb-fill { height: 100%; border-radius: 999px; }
+    .pt-empty-soft { color: #8b9bb4; font-size: 0.88rem; padding: 12px 0; }
+
+    .pt-home-storage-card .pt-storage-bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: #0f1419;
+      overflow: hidden;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .pt-home-storage-card .pt-storage-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0d9488, #2dd4bf);
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+    .pt-home-storage-card .pt-storage-text { margin: 0; font-size: 0.82rem; line-height: 1.5; color: #a8b5cc !important; }
+    .pt-rep-print-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .pt-rep-print-bar label { font-size: 0.85rem; color: #8b9bb4; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .pt-rep-print-bar select { min-width: 220px; padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.12); background: #0f1419; color: #e0e6ed; }
+    .brand-row-with-logo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    /* شعار الواجهة: حاوية شفافة — بدون multiply (كان يُغمّق الشعار فيختفي على الخلفية الداكنة) */
+    .bayan-logo-slot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+    .bayan-logo-slot img {
+      display: block;
+      max-height: 56px;
+      width: auto;
+      object-fit: contain;
+      border: none;
+      outline: none;
+      border-radius: 0;
+      box-shadow: none;
+      filter: none;
+      vertical-align: top;
+    }
+    .pt-logo-icon.pt-brand-svg {
+      width: auto;
+      height: auto;
+      min-width: 72px;
+      min-height: 72px;
+      padding: 0;
+      place-items: center;
+      border-radius: 0;
+      background: transparent;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+    .pt-logo-icon.pt-brand-svg img {
+      width: 68px;
+      height: 68px;
+      max-width: 72px;
+      max-height: 72px;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      border: none;
+      outline: none;
+      border-radius: 0;
+      box-shadow: none;
+      filter: none;
+      vertical-align: top;
+    }
+
+    .pt-pwd-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .pt-pwd-pass-cell { font-family: ui-monospace, monospace; font-size: 0.8rem; max-width: 140px; }
+    .pt-pwd-plain { word-break: break-all; }
+    .pt-pwd-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    @media (max-width: 768px) {
+      .pt-sidebar { width: 80px; }
+      .pt-main { margin-right: 80px !important; padding: 16px 12px 24px; }
+      .pt-logo-title, .pt-logo-sub, .pt-nav-item span, .pt-nav-badge { display: none; }
+      .pt-nav-item { justify-content: center; padding: 12px 10px; }
+      .pt-logo-icon.pt-brand-svg { min-width: 44px; min-height: 44px; }
+      .pt-logo-icon.pt-brand-svg img { width: 40px; height: 40px; max-width: 44px; max-height: 44px; filter: none; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="pt-layout-wrap">
+    <aside class="pt-sidebar" aria-label="القائمة الرئيسية">
+      <div class="pt-logo">
+        <div class="pt-logo-icon pt-brand-svg" aria-hidden="true"><img src="bayan-capital-logo.png" alt="" width="72" height="72" decoding="async" /></div>
+        <div>
+          <div class="pt-logo-title">Personal Tracker</div>
+          <div class="pt-logo-sub">لوحة المعاملات Pro</div>
+        </div>
+      </div>
+      <nav class="pt-nav-menu">
+        <button type="button" class="pt-nav-item is-active" data-pt-page="daily"><i class="fas fa-sun"></i><span>المهام اليومية</span></button>
+        <button type="button" class="pt-nav-item" data-pt-page="dashboard"><i class="fas fa-chart-pie"></i><span>لوحة التحكم</span></button>
+        <button type="button" class="pt-nav-item" data-pt-page="transactions"><i class="fas fa-exchange-alt"></i><span>المعاملات</span><span class="pt-nav-badge" id="ptBadgeTrans">0</span></button>
+        <button type="button" class="pt-nav-item" data-pt-page="tasks"><i class="fas fa-check-circle"></i><span>المهام</span><span class="pt-nav-badge" id="ptBadgeQuick">0</span></button>
+        <button type="button" class="pt-nav-item" data-pt-page="calendar"><i class="fas fa-calendar-alt"></i><span>التقويم</span></button>
+        <button type="button" class="pt-nav-item" data-pt-page="passwords"><i class="fas fa-key"></i><span>كلمات المرور</span></button>
+        <button type="button" class="pt-nav-item" data-pt-page="reports"><i class="fas fa-file-alt"></i><span>التقارير</span></button>
+        <button type="button" class="pt-nav-item" id="ptNavExport" data-pt-action="export" title="نفس زر «تصدير كل البيانات»: ملف JSON واحد يشمل المعاملات والمهام اليومية والسريعة وجدول المهام وكلمات المرور والمظهر ورمز الحماية إن وُجد."><i class="fas fa-file-code"></i><span>تصدير JSON</span></button>
+        <button type="button" class="pt-nav-item" id="ptNavImport" data-pt-action="import" title="استيراد ملف JSON كامل: يحدّث المعاملات (دمج أو استبدال) ثم يحدّث القوائم والمظهر من الملف تلقائياً إن كان الملف يحتوي قسم shell."><i class="fas fa-file-import"></i><span>استيراد JSON</span></button>
+      </nav>
+    </aside>
+    <div class="pt-main">
+      <div id="pt-page-daily" class="pt-page pt-surface is-active">
+        <div class="pt-header">
+          <h1 class="pt-header-title">المهام اليومية</h1>
+          <p class="pt-header-sub">متابعات اليوم من المعاملات، وقائمة شخصية تُحفظ لهذا اليوم في المتصفح.</p>
+        </div>
+        <div class="pt-card tf-card pt-home-storage-card">
+          <div class="pt-card-head"><i class="fas fa-database" style="margin-left:8px"></i> التخزين المحلي (التطبيق بالكامل)</div>
+          <div class="pt-card-body">
+            <p class="pt-header-sub" style="margin:0 0 12px">تقدير لحجم البيانات المحفوظة في هذا المتصفح: معاملات، مهام، قوائم يومية، كلمات مرور، وغيرها — مقارنةً بحد تقريبي 5 ميجابايت لـ localStorage في أغلب المتصفحات.</p>
+            <div class="pt-storage-bar-track" aria-hidden="true"><div class="pt-storage-bar-fill" id="ptHomeStorageBar"></div></div>
+            <p id="ptHomeStorageText" class="pt-storage-text">…</p>
+          </div>
+        </div>
+        <div class="pt-daily-grid">
+          <div class="pt-card tf-card">
+            <div class="pt-card-head"><i class="fas fa-table" style="margin-left:8px"></i> متابعات اليوم (المعاملات)</div>
+            <div class="pt-card-body">
+              <div id="ptDailyCasesTable"></div>
+            </div>
+          </div>
+          <div class="pt-card tf-card">
+            <div class="pt-card-head"><i class="fas fa-list-check" style="margin-left:8px"></i> قائمتي لليوم</div>
+            <div class="pt-card-body">
+              <p class="pt-daily-save-hint">تُحفظ في هذا المتصفح <strong>لكل يوم بتاريخه</strong> (اليوم، أمس، إلخ). المنجز يبقى مرتبطاً بذلك اليوم؛ المتبقي يمكنك نقله لليوم الحالي بالزر أدناه.</p>
+              <div class="pt-quick-add">
+                <input type="text" id="ptDailyTodoInput" class="pt-input" placeholder="أضف مهمة صغيرة..." autocomplete="off">
+                <button type="button" class="pt-btn-primary" id="ptDailyTodoAdd">إضافة لليوم</button>
+              </div>
+              <button type="button" class="pt-btn-secondary" id="ptDailyMoveFromYesterday">انقل المتبقي من أمس إلى اليوم</button>
+              <ul id="ptDailyTodoList" class="pt-todo-list"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="pt-card tf-card pt-daily-quick-block">
+          <div class="pt-card-head"><i class="fas fa-bolt" style="margin-left:8px"></i> مهام سريعة (عامّة)</div>
+          <div class="pt-card-body">
+            <p class="pt-header-sub" style="margin:0 0 12px">قائمة قصيرة غير مربوطة بجدول المهام — تُحفظ في المتصفح.</p>
+            <div class="pt-quick-add">
+              <input type="text" id="ptQuickTodoInput" class="pt-input" placeholder="مهمة سريعة..." autocomplete="off">
+              <button type="button" class="pt-btn-primary" id="ptQuickTodoAdd">إضافة</button>
+            </div>
+            <ul id="ptQuickTodoList" class="pt-todo-list"></ul>
+          </div>
+        </div>
+      </div>
+      <div id="pt-page-dashboard" class="pt-page pt-surface">
+        <div class="pt-header">
+          <h1 class="pt-header-title">لوحة التحكم</h1>
+          <p class="pt-header-sub">ملخص سريع من بيانات المعاملات</p>
+        </div>
+        <div class="pt-stats-grid">
+          <div class="pt-stat-card"><div class="pt-stat-val" id="ptDashTotal">0</div><div class="pt-stat-lbl">إجمالي المعاملات</div></div>
+          <div class="pt-stat-card"><div class="pt-stat-val" id="ptDashOpen">0</div><div class="pt-stat-lbl">غير المكتملة</div></div>
+          <div class="pt-stat-card"><div class="pt-stat-val" id="ptDashToday">0</div><div class="pt-stat-lbl">متابعة اليوم</div></div>
+          <div class="pt-stat-card"><div class="pt-stat-val" id="ptDashOverdue">0</div><div class="pt-stat-lbl">متأخرة</div></div>
+        </div>
+        <div class="pt-dash-split">
+          <div class="pt-card tf-card">
+            <div class="pt-card-head">معاملات حسب شهر تاريخ المتابعة (السنة الحالية)</div>
+            <div class="pt-card-body">
+              <p class="pt-chart-caption">عدد المعاملات غير المكتملة حسب شهر تاريخ المتابعة — مرّر المؤشر فوق العمود لرؤية العدد.</p>
+              <div class="pt-chart-panel" id="ptShellChart" role="img" aria-label="رسم بياني شهري لمعاملات المتابعة"></div>
+            </div>
+          </div>
+          <div class="pt-card tf-card">
+            <div class="pt-card-head">أقرب المتابعات</div>
+            <div class="pt-card-body"><div class="pt-act-mini" id="ptShellFollowups"></div></div>
+          </div>
+        </div>
+      </div>
+      <div id="pt-page-tasks" class="pt-page pt-surface">
+        <div class="pt-task-page-head">
+          <div>
+            <h1 class="pt-header-title">المهام</h1>
+            <p class="pt-header-sub">تتبع وإدارة مهامك</p>
+          </div>
+          <div class="pt-task-head-actions">
+            <div class="pt-task-search-wrap">
+              <i class="fas fa-search" aria-hidden="true"></i>
+              <input type="search" id="ptSidebarTaskSearch" class="pt-task-search" placeholder="بحث في المهام..." autocomplete="off">
+            </div>
+            <button type="button" class="pt-btn-primary" id="ptSidebarTaskAddBtn"><i class="fas fa-plus" style="margin-left:8px"></i> إضافة مهمة</button>
+          </div>
+        </div>
+        <div class="pt-task-filters" id="ptSidebarTaskFilters">
+          <button type="button" class="pt-filter-btn is-active" data-st-filter="all">الكل</button>
+          <button type="button" class="pt-filter-btn" data-st-filter="pending">قيد الانتظار</button>
+          <button type="button" class="pt-filter-btn" data-st-filter="progress">جارية</button>
+          <button type="button" class="pt-filter-btn" data-st-filter="done">مكتملة</button>
+          <button type="button" class="pt-filter-btn" data-st-filter="high">أولوية عالية</button>
+        </div>
+        <div class="pt-card tf-card">
+          <div class="pt-card-body pt-task-table-body">
+            <div class="pt-task-table-scroll">
+              <table class="pt-task-table">
+                <thead>
+                  <tr>
+                    <th>المهمة</th>
+                    <th>الوصف</th>
+                    <th>الأولوية</th>
+                    <th>الحالة</th>
+                    <th>الموعد النهائي</th>
+                    <th>التقدم</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="ptSidebarTasksBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="pt-page-passwords" class="pt-page pt-surface">
+        <div class="pt-header">
+          <h1 class="pt-header-title">كلمات المرور</h1>
+          <p class="pt-header-sub">محفوظة محليًا في هذا المتصفح فقط — غير مشفّرة داخل الملف. لا تستخدمها لبيانات حساسة جدًا دون فهم المخاطر. يُفضّل التصدير JSON المشفر يدويًا أو حفظ نسخة خارج الجهاز.</p>
+        </div>
+        <div class="pt-pwd-toolbar">
+          <button type="button" class="pt-btn-primary" id="ptPwdAddBtn"><i class="fas fa-plus" style="margin-left:8px"></i> إضافة سجل</button>
+          <div style="display:flex;flex-wrap:wrap;gap:10px">
+            <button type="button" class="pt-btn-secondary" id="ptPwdExportExcel"><i class="fas fa-file-excel" style="margin-left:8px"></i>تصدير Excel</button>
+            <button type="button" class="pt-btn-secondary" id="ptPwdExportTxt"><i class="fas fa-file-alt" style="margin-left:8px"></i>تصدير نص (Notepad)</button>
+          </div>
+        </div>
+        <div class="pt-card tf-card">
+          <div class="pt-card-body pt-task-table-body">
+            <div class="pt-task-table-scroll">
+              <table class="pt-task-table">
+                <thead>
+                  <tr>
+                    <th>العنوان</th>
+                    <th>اسم المستخدم</th>
+                    <th>كلمة المرور</th>
+                    <th>الرابط</th>
+                    <th>ملاحظات</th>
+                    <th>إجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="ptPasswordsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="pt-page-calendar" class="pt-page pt-surface">
+        <div class="pt-header">
+          <h1 class="pt-header-title">التقويم</h1>
+          <p class="pt-header-sub">متابعات المعاملات، تواريخ تسجيلها، مهام الجدول، والقوائم اليومية — اختر شهرًا ثم اضغط يومًا للتفاصيل.</p>
+        </div>
+        <div class="pt-card tf-card">
+          <div class="pt-card-body">
+            <div class="pt-cal-toolbar">
+              <div class="pt-cal-head">
+                <button type="button" class="pt-btn-secondary" id="ptShellCalPrev" aria-label="الشهر السابق">‹</button>
+                <div class="pt-cal-label-block">
+                  <strong id="ptShellCalLabelGr"></strong>
+                  <span id="ptShellCalLabelHj" class="pt-cal-hj-line"></span>
+                </div>
+                <button type="button" class="pt-btn-secondary" id="ptShellCalNext" aria-label="الشهر التالي">›</button>
+              </div>
+              <div class="pt-cal-filters">
+                <label class="pt-cal-filter-lbl">انتقال سريع
+                  <input type="month" id="ptShellCalMonthPick" class="pt-input pt-cal-month" title="اختيار السنة والشهر">
+                </label>
+                <button type="button" class="pt-btn-secondary" id="ptShellCalToday"><i class="fas fa-calendar-day" style="margin-left:6px"></i>اليوم</button>
+              </div>
+            </div>
+            <div class="pt-cal-grid" id="ptShellCalGrid" role="grid" aria-label="شبكة أيام الشهر"></div>
+            <p class="pt-header-sub" style="margin-top:12px;margin-bottom:0" id="ptShellCalHint"></p>
+            <div id="ptCalDayPanel" class="pt-cal-day-panel" aria-live="polite" aria-hidden="true">
+              <div class="pt-cal-day-panel-head">
+                <strong id="ptCalPanelTitle"></strong>
+                <button type="button" class="pt-cal-panel-close" id="ptCalPanelClose" aria-label="إغلاق">×</button>
+              </div>
+              <div id="ptCalPanelBody"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="pt-page-reports" class="pt-page pt-surface">
+        <div class="pt-header">
+          <h1 class="pt-header-title">التقارير</h1>
+          <p class="pt-header-sub">توزيع الحالات والأولويات (غير المؤرشفة) — طباعة موحّدة للمعاملات و/أو المهام.</p>
+        </div>
+        <div class="pt-rep-print-bar">
+          <label>نطاق الطباعة
+            <select id="ptRepPrintScope" title="اختر ما يُدرج في مستند الطباعة">
+              <option value="cases">المعاملات فقط (غير المؤرشفة)</option>
+              <option value="tasks">المهام فقط (جدول المهام)</option>
+              <option value="all">الكل (معاملات ثم مهام)</option>
+            </select>
+          </label>
+          <button type="button" class="pt-btn-primary" id="ptRepPrintBtn"><i class="fas fa-print" style="margin-left:8px"></i>طباعة التقرير</button>
+        </div>
+        <div class="pt-dash-split">
+          <div class="pt-card tf-card">
+            <div class="pt-card-head">حسب الحالة</div>
+            <div class="pt-card-body" id="ptShellRepStatus"></div>
+          </div>
+          <div class="pt-card tf-card">
+            <div class="pt-card-head">حسب الأولوية</div>
+            <div class="pt-card-body" id="ptShellRepPriority"></div>
+          </div>
+        </div>
+      </div>
+      <div id="pt-page-transactions" class="pt-page">
+        <div class="app">
+    <header class="topbar">
+      <div class="topbar-head">
+        <div>
+          <div class="brand-row brand-row-with-logo">
+            <span class="bayan-logo-slot" title="شركة بيان كابيتال">
+              <img class="brand-logo-bayan" src="bayan-capital-logo.png" alt="شركة بيان كابيتال" height="56" width="220" decoding="async" />
+            </span>
+          </div>
+          <h1 class="title">لوحة متابعة المعاملات - Pro</h1>
+        </div>
+        <div class="date-chip" id="todayBadge"><span class="icon">🗓</span><span>...</span></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn primary" id="addBtn" type="button">+ معاملة جديدة</button>
+        <button class="btn soft" id="backupBtn" type="button">تصدير كل البيانات (JSON)</button>
+        <button class="btn" id="csvBtn" type="button">تصدير CSV</button>
+        <button class="btn" id="excelBtn" type="button">تصدير Excel</button>
+        <button class="btn" id="wordBtn" type="button">تصدير Word</button>
+        <button class="btn" id="printBtn" type="button">طباعة القائمة</button>
+        <button class="btn" id="responsibleReportBtn" type="button">تقرير مسؤول</button>
+        <button class="btn" id="importBtn" type="button">استيراد</button>
+        <button class="btn" id="cloudRestoreBtn" type="button">استرجاع سحابي</button>
+        <button class="btn" id="setPinBtn" type="button">رمز الحماية</button>
+        <button class="btn" id="undoBtn" type="button">تراجع</button>
+        <button class="btn" id="themeBtn" type="button">وضع داكن</button>
+        <button class="btn soft" id="reminderNotifBtn" type="button" title="تنبيهات متابعة المعاملات (اليوم / غداً / متأخرة)">🔔 تنبيهات المتابعة</button>
+        <input id="importFile" class="hidden" type="file" accept=".json,application/json">
+      </div>
+    </header>
+
+    <section class="grid-cards" aria-label="العدادات">
+      <article class="card"><div class="kpi-label">إجمالي المعاملات</div><div class="kpi-value" id="kpiTotal">0</div></article>
+      <article class="card"><div class="kpi-label">مفتوحة</div><div class="kpi-value" id="kpiOpen">0</div></article>
+      <article class="card"><div class="kpi-label">اليوم للمتابعة</div><div class="kpi-value" id="kpiToday">0</div></article>
+      <article class="card"><div class="kpi-label">متأخرة</div><div class="kpi-value" id="kpiOverdue">0</div></article>
+      <article class="card"><div class="kpi-label">مستند ناقص</div><div class="kpi-value" id="kpiMissing">0</div></article>
+      <article class="card"><div class="kpi-label">مكتملة</div><div class="kpi-value" id="kpiDone">0</div></article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <strong>إدارة المعاملات</strong>
+      </div>
+      <div class="filters">
+        <input class="input" id="searchInput" type="search" placeholder="ابحث باسم المعاملة أو الجهة أو المرجع أو الإجراء...">
+        <select class="select" id="statusFilter">
+          <option value="all">كل الحالات</option>
+          <option>قيد التنفيذ</option>
+          <option>بانتظار رد</option>
+          <option>بانتظار سداد</option>
+          <option>مستند ناقص</option>
+          <option>مكتملة</option>
+          <option value="archived">المؤرشفة</option>
+        </select>
+        <select class="select" id="priorityFilter">
+          <option value="all">كل الأولويات</option>
+          <option>عالية</option>
+          <option>متوسطة</option>
+          <option>منخفضة</option>
+        </select>
+        <select class="select" id="followFilter">
+          <option value="all">كل المتابعات</option>
+          <option value="today">اليوم</option>
+          <option value="tomorrow">غداً</option>
+          <option value="week">7 أيام</option>
+          <option value="overdue">متأخرة</option>
+        </select>
+        <select class="select" id="agencyFilter">
+          <option value="all">كل الجهات</option>
+        </select>
+        <select class="select" id="sortFilter">
+          <option value="followAsc">الأقرب متابعة</option>
+          <option value="followDesc">الأبعد متابعة</option>
+          <option value="newest">الأحدث</option>
+          <option value="oldest">الأقدم</option>
+        </select>
+        <select class="select" id="responsibleFilter">
+          <option value="all">كل المسؤولين</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>المعاملة</th>
+              <th>القسم</th>
+              <th>الجهة</th>
+              <th>المسؤول</th>
+              <th>الحالة</th>
+              <th>تاريخ المعاملة</th>
+              <th>المتابعة</th>
+              <th>الإجراء القادم</th>
+              <th>الأولوية</th>
+              <th>إدارة</th>
+            </tr>
+          </thead>
+          <tbody id="rowsBody"></tbody>
+        </table>
+      </div>
+      <div class="mobile-cards" id="mobileCards"></div>
+      <div class="statusline">
+        <span id="resultsInfo">0 نتيجة</span>
+        <span id="syncInfo">جاهز</span>
+      </div>
+    </section>
+    <button class="fab" id="fabAddBtn" type="button" aria-label="إضافة">+</button>
+    <nav class="bottom-nav" aria-label="تنقل سريع">
+      <button class="is-active" data-target="top" type="button">الرئيسية</button>
+      <button data-target="cases" type="button">المعاملات</button>
+      <button data-target="reports" type="button">التقارير</button>
+      <button data-target="settings" type="button">الإعدادات</button>
+    </nav>
+  </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <form class="dialog" id="form">
+      <div class="dialog-head">
+        <strong id="modalTitle">إضافة معاملة</strong>
+        <button class="btn" id="closeModalBtn" type="button">إغلاق</button>
+      </div>
+      <div class="form-grid">
+        <input id="id" type="hidden">
+        <div class="field">
+          <label for="title">اسم المعاملة</label>
+          <input id="title" required>
+        </div>
+        <div class="field">
+          <label for="agency">الجهة</label>
+          <input id="agency" required>
+        </div>
+        <div class="field">
+          <label for="sourceDept">القسم الصادر</label>
+          <input id="sourceDept">
+        </div>
+        <div class="field">
+          <label for="responsible">المسؤول</label>
+          <input id="responsible">
+        </div>
+        <div class="field">
+          <label for="reference">رقم المرجع</label>
+          <input id="reference">
+        </div>
+        <div class="field">
+          <label for="status">الحالة</label>
+          <select id="status">
+            <option>قيد التنفيذ</option>
+            <option>بانتظار رد</option>
+            <option>بانتظار سداد</option>
+            <option>مستند ناقص</option>
+            <option>مكتملة</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="priority">الأولوية</label>
+          <select id="priority">
+            <option>عالية</option>
+            <option>متوسطة</option>
+            <option>منخفضة</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="caseDate">تاريخ المعاملة</label>
+          <input id="caseDate" type="date" required>
+        </div>
+        <div class="field">
+          <label for="followUp">تاريخ المتابعة</label>
+          <input id="followUp" type="date" required>
+        </div>
+        <div class="field field-wide">
+          <label for="nextAction">الإجراء القادم</label>
+          <textarea id="nextAction" rows="3"></textarea>
+        </div>
+        <div class="field field-wide">
+          <label>مراحل المعاملة (متعددة)</label>
+          <div class="actions-editor">
+            <div class="actions-editor__head">
+              <small>أضف كل مرحلة في صف مستقل: التاريخ + المطلوب + الحالة</small>
+              <button class="mini" id="addActionRowBtn" type="button">+ إضافة مرحلة</button>
+            </div>
+            <table class="actions-editor__table">
+              <thead>
+                <tr>
+                  <th>تاريخ المرحلة</th>
+                  <th>المطلوب / التفاصيل</th>
+                  <th>الحالة</th>
+                  <th>إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="actionRowsBody"></tbody>
+            </table>
+          </div>
+          <small>الحالات: منجز / فشل / قيد التنفيذ</small>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn primary" type="submit">حفظ</button>
+        <button class="btn" id="cancelBtn" type="button">إلغاء</button>
+      </div>
+    </form>
+  </div>
+  <div class="modal" id="stageViewerModal" role="dialog" aria-modal="true" aria-labelledby="stageViewerTitle">
+    <div class="dialog">
+      <div class="dialog-head">
+        <strong id="stageViewerTitle">استعراض مراحل المعاملة</strong>
+        <button class="btn" id="closeStageViewerBtn" type="button">إغلاق</button>
+      </div>
+      <div class="form-grid">
+        <div class="field field-wide">
+          <label>تفاصيل ما تم إضافته</label>
+          <ul id="stageViewerList" class="stage-viewer-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="ptPwdModal" role="dialog" aria-modal="true" aria-labelledby="ptPwdModalTitle">
+    <form class="dialog" id="ptPwdForm" style="width:min(560px,100%)">
+      <div class="dialog-head">
+        <strong id="ptPwdModalTitle">سجل جديد</strong>
+        <button class="btn" type="button" id="ptPwdCloseBtn">إغلاق</button>
+      </div>
+      <div class="form-grid">
+        <input type="hidden" id="pwId" value="">
+        <div class="field field-wide">
+          <label for="pwTitle">العنوان / الخدمة</label>
+          <input class="input" id="pwTitle" required placeholder="مثال: البريد، البنك، منصة…">
+        </div>
+        <div class="field">
+          <label for="pwUsername">اسم المستخدم</label>
+          <input class="input" id="pwUsername" autocomplete="off" placeholder="اختياري">
+        </div>
+        <div class="field">
+          <label for="pwPassword">كلمة المرور</label>
+          <input class="input" id="pwPassword" type="text" autocomplete="off" placeholder="كلمة المرور">
+        </div>
+        <div class="field field-wide">
+          <label for="pwUrl">رابط الموقع</label>
+          <input class="input" id="pwUrl" type="url" placeholder="https://…">
+        </div>
+        <div class="field field-wide">
+          <label for="pwNotes">ملاحظات</label>
+          <textarea class="input" id="pwNotes" rows="2" placeholder="تلميحات، أسئلة أمان…"></textarea>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn primary" type="submit" id="ptPwdSaveBtn">حفظ</button>
+        <button class="btn" type="button" id="ptPwdCancelBtn">إلغاء</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="ptTaskModal" role="dialog" aria-modal="true" aria-labelledby="ptTaskModalTitle">
+    <form class="dialog" id="ptTaskForm" style="width:min(620px,100%)">
+      <div class="dialog-head">
+        <strong id="ptTaskModalTitle">مهمة جديدة</strong>
+        <button class="btn" type="button" id="ptSidebarTaskCloseBtn">إغلاق</button>
+      </div>
+      <div class="form-grid">
+        <input type="hidden" id="stTaskId" value="">
+        <div class="field field-wide">
+          <label for="stTitle">عنوان المهمة</label>
+          <input class="input" id="stTitle" required placeholder="عنوان المهمة">
+        </div>
+        <div class="field field-wide">
+          <label for="stDesc">الوصف</label>
+          <textarea class="input" id="stDesc" rows="3" placeholder="وصف تفصيلي للمهمة..."></textarea>
+        </div>
+        <div class="field">
+          <label for="stPriority">الأولوية</label>
+          <select class="select" id="stPriority">
+            <option>عالية</option>
+            <option selected>متوسطة</option>
+            <option>منخفضة</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="stStatus">الحالة</label>
+          <select class="select" id="stStatus">
+            <option selected>قيد الانتظار</option>
+            <option>جارية</option>
+            <option>مكتملة</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="stDeadline">الموعد النهائي</label>
+          <input class="input" id="stDeadline" type="date" required>
+        </div>
+        <div class="field">
+          <label for="stProgress">نسبة التقدم (%)</label>
+          <input class="input" id="stProgress" type="number" min="0" max="100" value="0">
+        </div>
+        <div class="field field-wide">
+          <label for="stLinkedCase">مرتبطة بمعاملة (اختياري)</label>
+          <select class="select" id="stLinkedCase">
+            <option value="">— لا شيء —</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn primary" type="submit" id="ptSidebarTaskSaveBtn">حفظ المهمة</button>
+        <button class="btn" type="button" id="ptSidebarTaskCancelBtn">إلغاء</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script>
+    const STORE = 'ptp.store.v2';
+    const REMINDER_LAST_MS = 'ptp.reminderLastMs.v1';
+    const BACKUPS = 'ptp.backups.v2';
+    const THEME = 'ptp.theme.v1';
+    const SECURITY_PIN = 'ptp.security.pin.v1';
+    const MAX_BACKUPS = 12;
+    const SCHEMA = 3;
+    const DAILY_TODOS = 'ptp.dailyTodos.v1';
+    const QUICK_TODOS = 'ptp.quickTodos.v1';
+    const SIDEBAR_TASKS = 'ptp.sidebarTasks.v1';
+    const PASSWORDS = 'ptp.passwords.v1';
+    const BAYAN_LOGO_FILE = 'bayan-capital-logo.png';
+    let bayanLogoResolvedSrc;
+    async function resolveBayanLogoSrc() {
+      if (bayanLogoResolvedSrc !== undefined) return bayanLogoResolvedSrc;
+      try {
+        const res = await fetch(BAYAN_LOGO_FILE, { cache: 'force-cache' });
+        if (!res.ok) {
+          bayanLogoResolvedSrc = BAYAN_LOGO_FILE;
+          return bayanLogoResolvedSrc;
+        }
+        const blob = await res.blob();
+        bayanLogoResolvedSrc = await new Promise((resolve) => {
+          const fr = new FileReader();
+          fr.onload = () => resolve(fr.result || BAYAN_LOGO_FILE);
+          fr.onerror = () => resolve(BAYAN_LOGO_FILE);
+          fr.readAsDataURL(blob);
+        });
+      } catch {
+        bayanLogoResolvedSrc = BAYAN_LOGO_FILE;
+      }
+      return bayanLogoResolvedSrc;
+    }
+    let html2PdfLoadPromise = null;
+    const CLOUD = {
+      enabled: true,
+      appId: 'personal-tracker-pro-2030',
+      docId: 'shared-main',
+      firebaseConfig: {
+        apiKey: 'AIzaSyBoMDIeE9GBkpeTTClnhqQcroG0dO_3lwM',
+        authDomain: 'bayan-tracker.firebaseapp.com',
+        projectId: 'bayan-tracker',
+        storageBucket: 'bayan-tracker.firebasestorage.app',
+        messagingSenderId: '254042159508',
+        appId: '1:254042159508:web:1361c49b4a21e406637781'
+      }
+    };
+
+    const seed = [
+      { id: uid(), title: 'تجديد رخصة القيادة', agency: 'أبشر', sourceDept: 'الإدارة الشخصية', responsible: 'أحمد', reference: 'ABS-28491', status: 'بانتظار سداد', priority: 'عالية', caseDate: today(-1), followUp: today(0), nextAction: 'دفع الرسوم ورفع التأكيد', actions: [{date: today(-1), title:'تقديم الطلب', status:'منجز'},{date: today(0), title:'دفع الرسوم', status:'قيد التنفيذ'}], createdAt: now(), updatedAt: now() },
+      { id: uid(), title: 'طلب صك إلكتروني', agency: 'ناجز', sourceDept: 'الشؤون القانونية', responsible: 'محمد', reference: 'NJZ-51077', status: 'قيد التنفيذ', priority: 'متوسطة', caseDate: today(-2), followUp: today(2), nextAction: 'انتظار تحديث الجهة', actions: [{date: today(-2), title:'فتح الطلب', status:'منجز'},{date: today(2), title:'متابعة التحديث', status:'قيد التنفيذ'}], createdAt: now(), updatedAt: now() },
+      { id: uid(), title: 'تجديد سجل تجاري', agency: 'وزارة التجارة', sourceDept: 'الإدارة المالية', responsible: 'سارة', reference: 'MC-90312', status: 'مستند ناقص', priority: 'عالية', caseDate: today(-3), followUp: today(-1), nextAction: 'إرفاق تفويض محدث', actions: [{date: today(-3), title:'رفع الطلب', status:'منجز'},{date: today(-1), title:'إرفاق التفويض', status:'فشل'}], createdAt: now(), updatedAt: now() }
+    ];
+
+    let state = loadState();
+    let undoSnapshot = null;
+    let currentEditingActions = [];
+    let existingActionsLockedCount = 0;
+    let cloudDb = null;
+    let cloudDocRef = null;
+    let cloudReady = false;
+    let cloudInitialized = false;
+    let applyingRemote = false;
+    let cloudPushTimer = null;
+    let ptShellNavBound = false;
+    let ptShellCalView = new Date();
+    let ptCalSelectedIso = null;
+
+    const rowsBody = document.querySelector('#rowsBody');
+    const mobileCards = document.querySelector('#mobileCards');
+    const modal = document.querySelector('#modal');
+    const form = document.querySelector('#form');
+    const actionRowsBody = document.querySelector('#actionRowsBody');
+    const stageViewerModal = document.querySelector('#stageViewerModal');
+
+    init();
+
+    function init() {
+      try { localStorage.removeItem('ptp.user.role.v1'); } catch {}
+      applyTheme(localStorage.getItem(THEME) || 'dark');
+      renderTodayBadge();
+      bind();
+      ptBindShellNavOnce();
+      render();
+      initCloudSync();
+      window.addEventListener('storage', (e) => {
+        if (e.key !== STORE || !e.newValue) return;
+        try {
+          const incoming = JSON.parse(e.newValue);
+          if (!incoming?.payload?.items) return;
+          state = normalizeStore(incoming);
+          render();
+          setSync('تمت مزامنة البيانات من تبويب/نافذة أخرى');
+        } catch {}
+      });
+      safeAutoBackup('startup');
+      syncReminderButtonLabel();
+      setTimeout(scanFollowUpReminders, 12000);
+      setInterval(scanFollowUpReminders, 45 * 60000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') scanFollowUpReminders();
+      });
+    }
+
+    function bind() {
+      on('#addBtn', 'click', () => openModal());
+      on('#fabAddBtn', 'click', () => openModal());
+      on('#closeModalBtn', 'click', closeModal);
+      on('#cancelBtn', 'click', closeModal);
+      on('#closeStageViewerBtn', 'click', closeStageViewer);
+      on('#backupBtn', 'click', exportJson);
+      on('#csvBtn', 'click', exportCsv);
+      on('#excelBtn', 'click', exportExcel);
+      on('#wordBtn', 'click', exportWord);
+      on('#printBtn', 'click', printDashboard);
+      on('#ptRepPrintBtn', 'click', runReportsPrint);
+      on('#ptPwdExportTxt', 'click', exportPasswordsTxt);
+      on('#ptPwdExportExcel', 'click', exportPasswordsExcel);
+      on('#responsibleReportBtn', 'click', exportResponsibleReport);
+      on('#cloudRestoreBtn', 'click', restoreFromCloudBackups);
+      on('#setPinBtn', 'click', setupPin);
+      on('#addActionRowBtn', 'click', () => {
+        syncEditingActionsFromDom();
+        currentEditingActions.push({ date: today(0), title: '', status: 'قيد التنفيذ' });
+        renderActionRows();
+      });
+      on('#importBtn', 'click', () => document.querySelector('#importFile').click());
+      on('#undoBtn', 'click', undo);
+      on('#themeBtn', 'click', toggleTheme);
+      on('#searchInput', 'input', render);
+      on('#statusFilter', 'change', render);
+      on('#priorityFilter', 'change', render);
+      on('#followFilter', 'change', render);
+      on('#agencyFilter', 'change', render);
+      on('#sortFilter', 'change', render);
+      on('#responsibleFilter', 'change', render);
+      on('#reminderNotifBtn', 'click', async () => {
+        if (!('Notification' in window)) {
+          alert('المتصفح لا يدعم إشعارات سطح المكتب.');
+          return;
+        }
+        const r = await Notification.requestPermission();
+        if (r === 'granted') {
+          setSync('تم تفعيل تنبيهات المتابعة');
+          scanFollowUpReminders();
+        } else {
+          alert('لم يُمنح الإذن. فعّل الإشعارات من إعدادات الموقع في المتصفح إن رغبت.');
+        }
+        syncReminderButtonLabel();
+      });
+      bindBottomNav();
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const item = readForm();
+        if (!item) return;
+        captureUndo();
+        const idx = state.payload.items.findIndex((x) => x.id === item.id);
+        if (idx >= 0) {
+          state.payload.items[idx] = item;
+        } else {
+          state.payload.items.unshift(item);
+        }
+        persist('save_case');
+        closeModal();
+      });
+
+      document.querySelector('#importFile').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          const parsed = JSON.parse(await file.text());
+          importData(parsed);
+        } catch {
+          alert('ملف غير صالح.');
+        } finally {
+          e.target.value = '';
+        }
+      });
+
+      rowsBody.addEventListener('click', (e) => {
+        const b = e.target.closest('button[data-act]');
+        if (!b) return;
+        const id = b.dataset.id;
+        const item = state.payload.items.find((x) => x.id === id);
+        if (!item) return;
+        if (b.dataset.act === 'stages') showCaseStages(item);
+        if (b.dataset.act === 'edit') openModal(item);
+        if (b.dataset.act === 'print') printCase(item.id);
+        if (b.dataset.act === 'pdf') downloadCasePdf(item.id);
+        if (b.dataset.act === 'archive') {
+          if (!verifyPin('أرشفة معاملة')) return;
+          if (!confirm('تأكيد أرشفة المعاملة؟')) return;
+          captureUndo();
+          item.archivedAt = now();
+          item.archivedBy = 'manual';
+          item.updatedAt = now();
+          persist('archive_case');
+        }
+        if (b.dataset.act === 'restore') {
+          if (!verifyPin('استرجاع معاملة')) return;
+          captureUndo();
+          item.archivedAt = '';
+          item.archivedBy = '';
+          item.updatedAt = now();
+          persist('restore_case');
+        }
+      });
+
+      mobileCards.addEventListener('click', (e) => {
+        const b = e.target.closest('button[data-act]');
+        if (!b) return;
+        const id = b.dataset.id;
+        const item = state.payload.items.find((x) => x.id === id);
+        if (!item) return;
+        if (b.dataset.act === 'stages') showCaseStages(item);
+        if (b.dataset.act === 'edit') openModal(item);
+        if (b.dataset.act === 'print') printCase(item.id);
+        if (b.dataset.act === 'pdf') downloadCasePdf(item.id);
+        if (b.dataset.act === 'archive') {
+          if (!verifyPin('أرشفة معاملة')) return;
+          if (!confirm('تأكيد أرشفة المعاملة؟')) return;
+          captureUndo();
+          item.archivedAt = now();
+          item.archivedBy = 'manual';
+          item.updatedAt = now();
+          persist('archive_case');
+        }
+        if (b.dataset.act === 'restore') {
+          if (!verifyPin('استرجاع معاملة')) return;
+          captureUndo();
+          item.archivedAt = '';
+          item.archivedBy = '';
+          item.updatedAt = now();
+          persist('restore_case');
+        }
+      });
+
+      actionRowsBody.addEventListener('click', (e) => {
+        const viewBtn = e.target.closest('button[data-view-action]');
+        if (viewBtn) {
+          const viewIndex = Number(viewBtn.dataset.viewAction);
+          if (Number.isNaN(viewIndex)) return;
+          openStageViewer(viewIndex);
+          return;
+        }
+        const btn = e.target.closest('button[data-remove-action]');
+        if (!btn) return;
+        const index = Number(btn.dataset.removeAction);
+        if (Number.isNaN(index)) return;
+        if (index < existingActionsLockedCount) {
+          alert('هذه مرحلة سابقة ومقفلة ولا يمكن حذفها.');
+          return;
+        }
+        syncEditingActionsFromDom();
+        currentEditingActions.splice(index, 1);
+        if (!currentEditingActions.length) {
+          currentEditingActions.push({ date: today(0), title: '', status: 'قيد التنفيذ' });
+        }
+        renderActionRows();
+      });
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      stageViewerModal.addEventListener('click', (e) => {
+        if (e.target === stageViewerModal) closeStageViewer();
+      });
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORE);
+      if (!raw) return freshState(seed);
+      try {
+        const parsed = JSON.parse(raw);
+        return normalizeStore(parsed);
+      } catch {
+        const recovered = recoverFromBackup();
+        return recovered || freshState(seed);
+      }
+    }
+
+    function freshState(items) {
+      return {
+        schema: SCHEMA,
+        meta: { updatedAt: now(), source: 'local', revision: 1 },
+        payload: { items: items.map(normalizeItem) }
+      };
+    }
+
+    function normalizeStore(data) {
+      if (!data || typeof data !== 'object') throw new Error('bad_store');
+      const schema = Number(data.schema || 1);
+      let items = [];
+      if (schema === 1 && Array.isArray(data)) items = data;
+      else if (Array.isArray(data.payload?.items)) items = data.payload.items;
+      else if (Array.isArray(data.items)) items = data.items;
+      else throw new Error('bad_items');
+      return {
+        schema: SCHEMA,
+        meta: { updatedAt: data.meta?.updatedAt || now(), source: data.meta?.source || 'local', revision: Number(data.meta?.revision || 1) },
+        payload: { items: items.map(normalizeItem).filter(validItem) }
+      };
+    }
+
+    function normalizeItem(x) {
+      const base = {
+        id: x.id || uid(),
+        title: str(x.title),
+        agency: str(x.agency),
+        sourceDept: str(x.sourceDept),
+        responsible: str(x.responsible),
+        reference: str(x.reference),
+        status: str(x.status || 'قيد التنفيذ'),
+        priority: str(x.priority || 'متوسطة'),
+        caseDate: x.caseDate || today(0),
+        followUp: x.followUp || x.caseDate || today(0),
+        nextAction: str(x.nextAction),
+        actions: normalizeActions(x.actions, x.nextAction, x.followUp || x.caseDate || today(0)),
+        createdAt: x.createdAt || now(),
+        updatedAt: x.updatedAt || now(),
+        archivedAt: x.archivedAt || '',
+        archivedBy: x.archivedBy || ''
+      };
+      return base;
+    }
+
+    function validItem(x) {
+      return x.title && x.agency && x.caseDate && x.followUp && (x.nextAction || (Array.isArray(x.actions) && x.actions.length));
+    }
+
+    function persist(reason) {
+      state.meta.updatedAt = now();
+      state.meta.revision += 1;
+      localStorage.setItem(STORE, JSON.stringify(state));
+      safeAutoBackup(reason);
+      if (!applyingRemote) scheduleCloudPush(reason);
+      render();
+      setSync(cloudReady ? 'تم الحفظ محليًا + سحابيًا' : 'تم الحفظ محليًا بنجاح');
+    }
+
+    function cloudConfigured() {
+      if (!CLOUD.enabled) return false;
+      const c = CLOUD.firebaseConfig || {};
+      return [c.apiKey, c.authDomain, c.projectId, c.appId].every((v) => String(v || '').trim());
+    }
+
+    async function initCloudSync() {
+      if (!cloudConfigured()) {
+        setSync('السحابة غير مفعلة: أضف إعدادات Firebase داخل الملف');
+        return;
+      }
+      try {
+        if (!window.firebase) throw new Error('firebase_missing');
+        if (!firebase.apps.length) firebase.initializeApp(CLOUD.firebaseConfig);
+        cloudDb = firebase.firestore();
+        cloudDocRef = cloudDb
+          .collection('trackerApps')
+          .doc(CLOUD.appId)
+          .collection('states')
+          .doc(CLOUD.docId);
+
+        cloudDocRef.onSnapshot(async (snap) => {
+          if (!snap.exists) {
+            cloudInitialized = true;
+            await pushCloud('bootstrap');
+            return;
+          }
+          const data = snap.data() || {};
+          if (!data.state) return;
+          const incoming = normalizeStore(data.state);
+          const mergedItems = mergeItems(state.payload?.items || [], incoming.payload?.items || []);
+          const mergedStore = {
+            schema: SCHEMA,
+            meta: {
+              updatedAt: now(),
+              source: 'cloud_merge',
+              revision: Math.max(Number(state.meta?.revision || 1), Number(incoming.meta?.revision || 1)) + 1
+            },
+            payload: { items: mergedItems }
+          };
+          const sameState = JSON.stringify(mergedStore.payload.items) === JSON.stringify(state.payload?.items || []);
+          applyingRemote = true;
+          state = sameState ? state : mergedStore;
+          localStorage.setItem(STORE, JSON.stringify(state));
+          if (!sameState) {
+            safeAutoBackup('cloud_pull_merge');
+            render();
+          }
+          const incomingShellRev = Number(data.shellRevision ?? 0);
+          const localShellRev = Number(localStorage.getItem('ptp.shellRev.v1') || 0);
+          if (data.shell && typeof data.shell === 'object' && incomingShellRev > localShellRev) {
+            applyShellSnapshot(normalizeImportedShell(data.shell));
+            localStorage.setItem('ptp.shellRev.v1', String(incomingShellRev));
+          }
+          applyingRemote = false;
+          cloudInitialized = true;
+          if (!sameState) scheduleCloudPush('cloud_merge_sync');
+          setSync('تمت مزامنة أحدث بيانات من السحابة');
+        }, (err) => {
+          console.error(err);
+          setSync('تعذر المزامنة السحابية - تأكد من إعدادات Firebase');
+        });
+
+        cloudReady = true;
+        // Wait until first snapshot to avoid overriding cloud data with stale local data.
+        setSync('المزامنة السحابية مفعلة (المعاملات + المهام اليومية/السريعة/الجدول/كلمات المرور عند التعديل)');
+      } catch (err) {
+        console.error(err);
+        setSync('فشل تفعيل المزامنة السحابية');
+      }
+    }
+
+    function scheduleCloudPush(reason) {
+      if (!cloudReady || !cloudDocRef || applyingRemote || !cloudInitialized) return;
+      clearTimeout(cloudPushTimer);
+      cloudPushTimer = setTimeout(() => {
+        pushCloud(reason).catch((err) => {
+          console.error(err);
+          setSync('تم الحفظ محليًا فقط - فشل رفع السحابة');
+        });
+      }, 450);
+    }
+
+    async function pushCloud(reason) {
+      if (!cloudReady || !cloudDocRef || !cloudInitialized) return;
+      const shellRevision = Number(localStorage.getItem('ptp.shellRev.v1') || 0);
+      await cloudDocRef.set(
+        {
+          state,
+          shell: collectShellSnapshot(),
+          shellRevision,
+          clientUpdatedAt: state.meta.updatedAt,
+          reason,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        },
+        { merge: true }
+      );
+      await saveCloudHistory(reason);
+    }
+
+    function touchShellCloudIfOutbound() {
+      if (applyingRemote) return;
+      try {
+        const next = Number(localStorage.getItem('ptp.shellRev.v1') || 0) + 1;
+        localStorage.setItem('ptp.shellRev.v1', String(next));
+        scheduleCloudPush('shell');
+      } catch {}
+    }
+
+    async function saveCloudHistory(reason) {
+      if (!cloudDocRef) return;
+      try {
+        await cloudDocRef.collection('history').add({
+          state,
+          reason,
+          itemCount: Array.isArray(state.payload?.items) ? state.payload.items.length : 0,
+          clientUpdatedAt: state.meta?.updatedAt || now(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function restoreFromCloudBackups() {
+      if (!cloudReady || !cloudDocRef) {
+        alert('المزامنة السحابية غير مفعلة.');
+        return;
+      }
+      try {
+        setSync('جاري تحميل النسخ السحابية...');
+        const snap = await cloudDocRef.collection('history').orderBy('createdAt', 'desc').limit(15).get();
+        if (snap.empty) {
+          alert('لا توجد نسخ سحابية متاحة للاسترجاع.');
+          return;
+        }
+        const backups = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter((x) => x?.state?.payload?.items);
+        if (!backups.length) {
+          alert('لا توجد نسخ صالحة للاسترجاع.');
+          return;
+        }
+        const options = backups.map((b, i) => {
+          const dt = b.clientUpdatedAt ? new Date(b.clientUpdatedAt).toLocaleString('ar-SA') : 'غير معروف';
+          const count = Number(b.itemCount || b.state?.payload?.items?.length || 0);
+          return `${i + 1}) ${dt} - ${count} معاملة - ${str(b.reason || 'backup')}`;
+        }).join('\n');
+        const pickRaw = prompt(`اختر رقم النسخة للاسترجاع:\n\n${options}\n\nاكتب رقم (1-${backups.length})`, '1');
+        if (!pickRaw) return;
+        const pick = Number(pickRaw);
+        if (!Number.isInteger(pick) || pick < 1 || pick > backups.length) {
+          alert('رقم غير صالح.');
+          return;
+        }
+        const selected = backups[pick - 1];
+        const incoming = normalizeStore(selected.state);
+        if (!confirm(`سيتم دمج نسخة ${pick} مع البيانات الحالية. المتابعة؟`)) return;
+        captureUndo();
+        state.payload.items = mergeItems(state.payload.items || [], incoming.payload.items || []);
+        persist('restore_cloud_backup');
+        setSync('تم استرجاع نسخة سحابية ودمجها بنجاح');
+      } catch (err) {
+        console.error(err);
+        alert('تعذر استرجاع النسخ السحابية الآن.');
+      }
+    }
+
+    function mergeItems(localItems, remoteItems) {
+      const byId = new Map();
+      for (const item of remoteItems) {
+        if (!item?.id) continue;
+        byId.set(item.id, normalizeItem(item));
+      }
+      for (const item of localItems) {
+        if (!item?.id) continue;
+        const existing = byId.get(item.id);
+        if (!existing) {
+          byId.set(item.id, normalizeItem(item));
+          continue;
+        }
+        const left = Date.parse(existing.updatedAt || 0) || 0;
+        const right = Date.parse(item.updatedAt || 0) || 0;
+        byId.set(item.id, normalizeItem(right >= left ? item : existing));
+      }
+      return [...byId.values()].sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || ''));
+    }
+
+    function safeAutoBackup(reason) {
+      try {
+        const backups = JSON.parse(localStorage.getItem(BACKUPS) || '[]');
+        backups.unshift({
+          reason,
+          at: now(),
+          data: state
+        });
+        const trimmed = backups.slice(0, MAX_BACKUPS);
+        localStorage.setItem(BACKUPS, JSON.stringify(trimmed));
+      } catch {}
+    }
+
+    function recoverFromBackup() {
+      try {
+        const backups = JSON.parse(localStorage.getItem(BACKUPS) || '[]');
+        for (const b of backups) {
+          try {
+            return normalizeStore(b.data);
+          } catch {}
+        }
+      } catch {}
+      return null;
+    }
+
+    function captureUndo() {
+      undoSnapshot = JSON.parse(JSON.stringify(state));
+    }
+
+    function undo() {
+      if (!undoSnapshot) {
+        alert('لا يوجد إجراء للتراجع عنه.');
+        return;
+      }
+      state = undoSnapshot;
+      undoSnapshot = null;
+      persist('undo');
+    }
+
+    function collectShellSnapshot() {
+      const snap = {
+        dailyTodos: loadDailyTodoBuckets(),
+        quickTodos: loadQuickTodos(),
+        sidebarTasks: loadSidebarTasks(),
+        passwords: loadPasswords(),
+        theme: localStorage.getItem(THEME) || 'dark'
+      };
+      try {
+        const pin = localStorage.getItem(SECURITY_PIN);
+        if (pin && String(pin).trim()) snap.securityPin = String(pin).trim();
+      } catch {}
+      return snap;
+    }
+
+    function normalizeImportedShell(sh) {
+      if (!sh || typeof sh !== 'object') return null;
+      const out = { dailyTodos: {}, quickTodos: { items: [] }, sidebarTasks: { items: [] }, theme: 'dark' };
+      if (sh.dailyTodos && typeof sh.dailyTodos === 'object' && !Array.isArray(sh.dailyTodos)) {
+        out.dailyTodos = sh.dailyTodos;
+      }
+      const qt = sh.quickTodos;
+      if (qt && typeof qt === 'object' && Array.isArray(qt.items)) out.quickTodos = { items: qt.items };
+      const st = sh.sidebarTasks;
+      if (st && typeof st === 'object' && Array.isArray(st.items)) out.sidebarTasks = { items: st.items };
+      const pw = sh.passwords;
+      if (pw && typeof pw === 'object' && Array.isArray(pw.items)) out.passwords = { items: pw.items };
+      if (sh.theme === 'light' || sh.theme === 'dark') out.theme = sh.theme;
+      if (typeof sh.securityPin === 'string' && /^\d{4,}$/.test(sh.securityPin.trim())) out.securityPin = sh.securityPin.trim();
+      return out;
+    }
+
+    function applyShellSnapshot(sh) {
+      const norm = normalizeImportedShell(sh);
+      if (!norm) return;
+      try {
+        saveDailyTodoBuckets(norm.dailyTodos);
+        saveQuickTodos(norm.quickTodos);
+        saveSidebarTasks(norm.sidebarTasks);
+        if (Object.prototype.hasOwnProperty.call(norm, 'passwords')) savePasswords(norm.passwords);
+        localStorage.setItem(THEME, norm.theme);
+        applyTheme(norm.theme);
+        if (norm.securityPin) localStorage.setItem(SECURITY_PIN, norm.securityPin);
+      } catch {
+        alert('تعذر كتابة بعض بيانات الواجهة في التخزين المحلي.');
+        return;
+      }
+      ptRefreshShell();
+      renderSidebarTasksTable();
+      renderPasswordsTable();
+    }
+
+    function exportJson() {
+      const payload = {
+        schema: SCHEMA,
+        bundleVersion: 1,
+        exportedAt: now(),
+        app: 'personal-tracker-pro',
+        state,
+        shell: collectShellSnapshot()
+      };
+      download(`tracker-pro-backup-${stamp()}.json`, JSON.stringify(payload, null, 2), 'application/json;charset=utf-8');
+      setSync('تم تصدير كل البيانات في ملف JSON واحد');
+    }
+
+    function exportCsv() {
+      const h = ['اسم المعاملة', 'القسم', 'الجهة', 'المسؤول', 'المرجع', 'الحالة', 'تاريخ المعاملة', 'المتابعة', 'الإجراء القادم', 'الأولوية', 'المراحل'];
+      const rows = state.payload.items.map((i) => [
+        i.title, i.sourceDept, i.agency, i.responsible, i.reference, i.status, i.caseDate, i.followUp, i.nextAction, i.priority, actionsToInline(i.actions)
+      ]);
+      const csv = [h, ...rows].map((r) => r.map((c) => `"${String(c || '').replaceAll('"', '""')}"`).join(',')).join('\n');
+      download(`tracker-pro-${stamp()}.csv`, '\uFEFF' + csv, 'text/csv;charset=utf-8');
+      setSync('تم إنشاء ملف CSV');
+    }
+
+    function exportExcel() {
+      const headers = ['م', 'اسم المعاملة', 'القسم', 'الجهة', 'المسؤول', 'المرجع', 'الحالة', 'تاريخ المعاملة', 'المتابعة', 'الإجراء القادم', 'الأولوية', 'المراحل'];
+      const rows = state.payload.items.map((i, idx) => [
+        idx + 1,
+        i.title,
+        i.sourceDept,
+        i.agency,
+        i.responsible,
+        i.reference,
+        i.status,
+        i.caseDate,
+        i.followUp,
+        i.nextAction,
+        i.priority,
+        actionsToInline(i.actions)
+      ]);
+      const tableRows = [headers, ...rows].map((r, ridx) => `<tr>${r.map((c) => ridx === 0 ? `<th>${esc(c)}</th>` : `<td>${esc(c)}</td>`).join('')}</tr>`).join('');
+      const html = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>
+        table{border-collapse:collapse;width:100%;font-family:Tahoma,Arial,sans-serif}
+        th,td{border:1px solid #cbd5e1;padding:6px;text-align:right;font-size:12px}
+        th{background:#e2e8f0}
+      </style></head><body><table>${tableRows}</table></body></html>`;
+      download(`tracker-pro-${stamp()}.xls`, '\uFEFF' + html, 'application/vnd.ms-excel;charset=utf-8');
+      setSync('تم إنشاء ملف Excel');
+    }
+
+    function exportWord() {
+      const html = createPrintableHtml(state.payload.items, 'تقرير شامل المعاملات');
+      download(`tracker-pro-${stamp()}.doc`, '\uFEFF' + html, 'application/msword;charset=utf-8');
+      setSync('تم إنشاء ملف Word');
+    }
+
+    function importData(parsed) {
+      const maybeState = parsed?.state || parsed;
+      const incoming = normalizeStore(maybeState);
+      const hasShell = parsed?.shell && typeof parsed.shell === 'object';
+      const mode = hasShell
+        ? confirm(
+            'الملف يحتوي تصديرًا كاملاً (معاملات + قوائم المهام + كلمات المرور + المظهر).\n\nموافق = دمج المعاملات مع الموجود (نفس المعرف يُحدَّث) + استيراد كل القوائم والمظهر وكلمات المرور من الملف\nإلغاء = استبدال كل المعاملات من الملف + استيراد كل القوائم والمظهر وكلمات المرور من الملف'
+          )
+        : confirm('موافق = دمج المعاملات مع الموجود\nإلغاء = استبدال المعاملات كلها من الملف');
+      captureUndo();
+      if (mode) {
+        const byId = new Map(state.payload.items.map((i) => [i.id, i]));
+        for (const item of incoming.payload.items) byId.set(item.id, item);
+        state.payload.items = [...byId.values()];
+      } else {
+        state = incoming;
+      }
+      persist('import');
+      if (hasShell) applyShellSnapshot(parsed.shell);
+      setSync(hasShell ? 'تم استيراد كل البيانات من الملف' : 'تم الاستيراد بنجاح');
+    }
+
+    function openModal(item) {
+      form.reset();
+      document.querySelector('#modalTitle').textContent = item ? 'تعديل معاملة' : 'إضافة معاملة';
+      fill('#id', item?.id || '');
+      fill('#title', item?.title || '');
+      fill('#agency', item?.agency || '');
+      fill('#sourceDept', item?.sourceDept || '');
+      fill('#responsible', item?.responsible || '');
+      fill('#reference', item?.reference || '');
+      fill('#status', item?.status || 'قيد التنفيذ');
+      fill('#priority', item?.priority || 'متوسطة');
+      fill('#caseDate', item?.caseDate || today(0));
+      fill('#followUp', item?.followUp || today(0));
+      fill('#nextAction', item?.nextAction || '');
+      existingActionsLockedCount = item?.actions?.length ? item.actions.length : 0;
+      currentEditingActions = (item?.actions?.length ? item.actions : [{ date: item?.followUp || today(0), title: item?.nextAction || '', status: 'قيد التنفيذ' }])
+        .map((a) => ({
+          date: a.date || today(0),
+          title: a.title || '',
+          status: normalizeActionStatus(a.status),
+          addedAt: a.addedAt || a.updatedAt || now(),
+          updatedAt: a.updatedAt || now(),
+          addedBy: a.addedBy || item?.responsible || ''
+        }));
+      renderActionRows();
+      modal.classList.add('open');
+      document.querySelector('#title').focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      existingActionsLockedCount = 0;
+    }
+
+    function openStageViewer(activeIndex) {
+      renderStageViewer({
+        title: 'استعراض مراحل المعاملة',
+        rows: currentEditingActions || [],
+        activeIndex,
+        showLockedTag: true
+      });
+    }
+
+    function showCaseStages(item) {
+      const rows = (item?.actions && item.actions.length)
+        ? item.actions
+        : [{ date: item?.followUp || '', title: item?.nextAction || 'لا توجد مراحل', status: 'قيد التنفيذ' }];
+      renderStageViewer({
+        title: `مراحل المعاملة: ${item?.title || ''}`,
+        rows,
+        activeIndex: -1,
+        showLockedTag: false
+      });
+    }
+
+    function renderStageViewer({ title, rows, activeIndex, showLockedTag }) {
+      const list = document.querySelector('#stageViewerList');
+      if (!list) return;
+      document.querySelector('#stageViewerTitle').textContent = title;
+      list.innerHTML = rows.map((row, idx) => `
+        <li class="stage-viewer-item ${idx === activeIndex ? 'active' : ''}">
+          <div class="stage-viewer-head">
+            <span>المرحلة ${idx + 1}${showLockedTag && idx < existingActionsLockedCount ? ' (مقفلة)' : ''}</span>
+            <span>${prettyDate(row.date || today(0))} - ${esc(normalizeActionStatus(row.status))}</span>
+          </div>
+          <div class="stage-viewer-text">${esc(row.title || '-')}</div>
+          <div class="stage-meta-grid">
+            <div class="k">تاريخ المرحلة</div><div class="v">${prettyDate(row.date || today(0))}</div>
+            <div class="k">حالة المرحلة</div><div class="v">${esc(normalizeActionStatus(row.status))}</div>
+            <div class="k">أضيفت في</div><div class="v">${row.addedAt ? new Date(row.addedAt).toLocaleString('ar-SA') : '-'}</div>
+            <div class="k">آخر تحديث</div><div class="v">${row.updatedAt ? new Date(row.updatedAt).toLocaleString('ar-SA') : '-'}</div>
+            <div class="k">أضيفت بواسطة</div><div class="v">${esc(row.addedBy || '-')}</div>
+            <div class="k">التفاصيل الكاملة</div><div class="v">${esc(row.title || '-')}</div>
+          </div>
+        </li>
+      `).join('');
+      stageViewerModal.classList.add('open');
+    }
+
+    function closeStageViewer() {
+      stageViewerModal.classList.remove('open');
+    }
+
+    function readForm() {
+      const id = value('#id') || uid();
+      const actionOwner = value('#responsible').trim() || state.payload.items.find((x) => x.id === id)?.responsible || '';
+      const lockedActions = currentEditingActions
+        .slice(0, existingActionsLockedCount)
+        .map((a) => ({
+          date: normalizeIsoDate(a.date) || today(0),
+          title: str(a.title),
+          status: normalizeActionStatus(a.status),
+          addedAt: a.addedAt || now(),
+          updatedAt: now(),
+          addedBy: a.addedBy || actionOwner || ''
+        }))
+        .filter((a) => a.title);
+      const editableActions = collectActionRows().map((a) => ({
+        ...a,
+        addedAt: a.addedAt || now(),
+        updatedAt: now(),
+        addedBy: a.addedBy || actionOwner || ''
+      }));
+      const item = {
+        id,
+        title: value('#title').trim(),
+        agency: value('#agency').trim(),
+        sourceDept: value('#sourceDept').trim(),
+        responsible: value('#responsible').trim(),
+        reference: value('#reference').trim(),
+        status: value('#status'),
+        priority: value('#priority'),
+        caseDate: value('#caseDate'),
+        followUp: value('#followUp'),
+        nextAction: value('#nextAction').trim(),
+        actions: [...lockedActions, ...editableActions],
+        createdAt: state.payload.items.find((x) => x.id === id)?.createdAt || now(),
+        updatedAt: now()
+      };
+      if (!item.nextAction && item.actions.length) {
+        const nextPending = item.actions.find((a) => a.status !== 'منجز');
+        item.nextAction = (nextPending || item.actions[item.actions.length - 1]).title;
+      }
+      if (!validItem(item)) {
+        alert('الرجاء تعبئة الحقول المطلوبة.');
+        return null;
+      }
+      return item;
+    }
+
+    function renderActionRows() {
+      const rows = currentEditingActions.length ? currentEditingActions : [{ date: today(0), title: '', status: 'قيد التنفيذ' }];
+      currentEditingActions = rows;
+      actionRowsBody.innerHTML = rows.map((row, index) => `
+        <tr>
+          ${index < existingActionsLockedCount
+            ? `
+              <td>${prettyDate(row.date || today(0))}</td>
+              <td>${esc(row.title || '-')}</td>
+              <td><span class="badge ${row.status === 'منجز' ? 's-done' : row.status === 'فشل' ? 's-missing' : 's-running'}">${esc(normalizeActionStatus(row.status))}</span></td>
+              <td><button class="mini" type="button" data-view-action="${index}">استعراض</button></td>
+            `
+            : `
+              <td><input type="date" data-action-field="date" data-index="${index}" value="${escAttr(row.date || today(0))}"></td>
+              <td><input type="text" data-action-field="title" data-index="${index}" value="${escAttr(row.title || '')}" placeholder="مثال: رفع خطاب جديد"></td>
+              <td>
+                <select data-action-field="status" data-index="${index}">
+                  <option ${normalizeActionStatus(row.status) === 'قيد التنفيذ' ? 'selected' : ''}>قيد التنفيذ</option>
+                  <option ${normalizeActionStatus(row.status) === 'منجز' ? 'selected' : ''}>منجز</option>
+                  <option ${normalizeActionStatus(row.status) === 'فشل' ? 'selected' : ''}>فشل</option>
+                </select>
+              </td>
+              <td><button class="mini danger" type="button" data-remove-action="${index}">حذف</button></td>
+            `}
+        </tr>
+      `).join('');
+    }
+
+    function collectActionRows() {
+      const dates = [...actionRowsBody.querySelectorAll('[data-action-field="date"]')];
+      const titles = [...actionRowsBody.querySelectorAll('[data-action-field="title"]')];
+      const statuses = [...actionRowsBody.querySelectorAll('[data-action-field="status"]')];
+      const rows = [];
+      for (let i = 0; i < titles.length; i += 1) {
+        const title = titles[i].value.trim();
+        if (!title) continue;
+        rows.push({
+          date: normalizeIsoDate(dates[i]?.value) || today(0),
+          title,
+          status: normalizeActionStatus(statuses[i]?.value)
+        });
+      }
+      return rows;
+    }
+
+    function syncEditingActionsFromDom() {
+      const lockedRows = currentEditingActions
+        .slice(0, existingActionsLockedCount)
+        .map((row) => ({
+          date: row.date || today(0),
+          title: row.title || '',
+          status: normalizeActionStatus(row.status),
+          addedAt: row.addedAt || now(),
+          updatedAt: row.updatedAt || now(),
+          addedBy: row.addedBy || ''
+        }))
+        .filter((row) => row.title);
+      const editableRows = collectActionRows();
+      const combined = [...lockedRows, ...editableRows];
+      currentEditingActions = combined.length ? combined : [{ date: today(0), title: '', status: 'قيد التنفيذ' }];
+    }
+
+    function render() {
+      const rows = getFilteredRows();
+      renderKpi();
+      fillResponsibleFilter();
+      fillAgencyFilter();
+      renderRows(rows);
+      renderMobileCards(rows);
+      document.querySelector('#resultsInfo').textContent = `${rows.length} نتيجة`;
+      ptRefreshShell();
+    }
+
+    function getFilteredRows() {
+      const q = value('#searchInput').trim().toLowerCase();
+      const sf = value('#statusFilter');
+      const pf = value('#priorityFilter');
+      const ff = value('#followFilter');
+      const sort = value('#sortFilter');
+      const rf = value('#responsibleFilter');
+      const af = value('#agencyFilter');
+      const t = today(0);
+      const tm = today(1);
+      const w = today(7);
+
+      let rows = state.payload.items.filter((x) => {
+        const text = `${x.title} ${x.agency} ${x.sourceDept} ${x.responsible} ${x.reference} ${x.status} ${x.nextAction}`.toLowerCase();
+        if (q && !text.includes(q)) return false;
+        if (sf === 'archived') {
+          if (!x.archivedAt) return false;
+        } else {
+          if (x.archivedAt) return false;
+        }
+        if (sf !== 'all' && sf !== 'archived' && x.status !== sf) return false;
+        if (pf !== 'all' && x.priority !== pf) return false;
+        if (rf !== 'all' && x.responsible !== rf) return false;
+        if (af !== 'all' && x.agency !== af) return false;
+        if (ff === 'today' && x.followUp !== t) return false;
+        if (ff === 'tomorrow' && x.followUp !== tm) return false;
+        if (ff === 'week' && !(x.followUp >= t && x.followUp <= w)) return false;
+        if (ff === 'overdue' && !(x.followUp < t && x.status !== 'مكتملة')) return false;
+        return true;
+      });
+
+      const byDate = (a, b) => a.followUp.localeCompare(b.followUp);
+      if (sort === 'followAsc') rows.sort(byDate);
+      if (sort === 'followDesc') rows.sort((a, b) => byDate(b, a));
+      if (sort === 'newest') rows.sort((a, b) => b.caseDate.localeCompare(a.caseDate));
+      if (sort === 'oldest') rows.sort((a, b) => a.caseDate.localeCompare(b.caseDate));
+      return rows;
+    }
+
+    function renderKpi() {
+      const all = state.payload.items.filter((x) => !x.archivedAt);
+      const t = today(0);
+      const total = all.length;
+      const done = all.filter((x) => x.status === 'مكتملة').length;
+      const missing = all.filter((x) => x.status === 'مستند ناقص').length;
+      const open = total - done;
+      const todayCount = all.filter((x) => x.followUp === t && x.status !== 'مكتملة').length;
+      const overdue = all.filter((x) => x.followUp < t && x.status !== 'مكتملة').length;
+      text('#kpiTotal', total);
+      text('#kpiOpen', open);
+      text('#kpiToday', todayCount);
+      text('#kpiOverdue', overdue);
+      text('#kpiMissing', missing);
+      text('#kpiDone', done);
+    }
+
+    function renderRows(rows) {
+      if (!rows.length) {
+        rowsBody.innerHTML = '<tr><td colspan="11"><div class="empty">لا توجد نتائج مطابقة لخيارات الفلترة الحالية.</div></td></tr>';
+        return;
+      }
+      rowsBody.innerHTML = rows.map((i, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td>
+            <div class="case-title">${esc(i.title)}</div>
+            <div class="tiny">رقم: ${esc(i.reference || 'بدون')}</div>
+          </td>
+          <td>${esc(i.sourceDept || '-')}</td>
+          <td>${esc(i.agency)}</td>
+          <td>${esc(i.responsible || '-')}</td>
+          <td><span class="badge ${statusClass(i.status)}">${esc(i.status)}</span></td>
+          <td>${prettyDate(i.caseDate)}</td>
+          <td>${prettyDate(i.followUp)}</td>
+          <td>${esc(i.nextAction)}<div class="tiny">${esc(actionsSummary(i.actions))}</div></td>
+          <td><span class="pri ${priClass(i.priority)}"></span>${esc(i.priority)}</td>
+          <td>
+            <div class="actions">
+              <button class="mini" type="button" data-act="stages" data-id="${i.id}">مراحل</button>
+              <button class="mini" type="button" data-act="edit" data-id="${i.id}">تعديل</button>
+              <button class="mini" type="button" data-act="print" data-id="${i.id}">طباعة</button>
+              <button class="mini" type="button" data-act="pdf" data-id="${i.id}">PDF</button>
+              ${i.archivedAt
+                ? `<button class="mini" type="button" data-act="restore" data-id="${i.id}">استرجاع</button>`
+                : `<button class="mini danger" type="button" data-act="archive" data-id="${i.id}">أرشفة</button>`}
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderMobileCards(rows) {
+      if (!mobileCards) return;
+      if (!rows.length) {
+        mobileCards.innerHTML = '<div class="empty">لا توجد نتائج مطابقة.</div>';
+        return;
+      }
+      mobileCards.innerHTML = rows.map((i, idx) => `
+        <article class="m-card">
+          <p class="m-card__title">#${idx + 1} - ${esc(i.title)}</p>
+          <p class="m-card__meta">${esc(i.agency)} - ${esc(i.responsible || 'بدون مسؤول')}</p>
+          <div class="m-card__row"><span>الحالة</span><span class="badge ${statusClass(i.status)}">${esc(i.status)}</span></div>
+          <div class="m-card__row"><span>المتابعة</span><span>${prettyDate(i.followUp)}</span></div>
+          <div class="m-card__row"><span>الأولوية</span><span><span class="pri ${priClass(i.priority)}"></span>${esc(i.priority)}</span></div>
+          <div class="tiny">${esc(actionsSummary(i.actions))}</div>
+          <div class="actions" style="margin-top:8px">
+            <button class="mini" type="button" data-act="stages" data-id="${i.id}">مراحل</button>
+            <button class="mini" type="button" data-act="edit" data-id="${i.id}">تعديل</button>
+            <button class="mini" type="button" data-act="print" data-id="${i.id}">طباعة</button>
+            <button class="mini" type="button" data-act="pdf" data-id="${i.id}">PDF</button>
+            ${i.archivedAt
+              ? `<button class="mini" type="button" data-act="restore" data-id="${i.id}">استرجاع</button>`
+              : `<button class="mini danger" type="button" data-act="archive" data-id="${i.id}">أرشفة</button>`}
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function statusClass(v) {
+      if (v === 'مكتملة') return 's-done';
+      if (v === 'مستند ناقص') return 's-missing';
+      if (v === 'بانتظار رد' || v === 'بانتظار سداد') return 's-waiting';
+      return 's-running';
+    }
+
+    function priClass(v) {
+      if (v === 'عالية') return 'p-high';
+      if (v === 'متوسطة') return 'p-mid';
+      return 'p-low';
+    }
+
+    function prettyDate(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso + 'T12:00:00');
+      return new Intl.DateTimeFormat('ar-SA', { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+    }
+
+    function estimateStorageBreakdown() {
+      const keys = [STORE, BACKUPS, THEME, SECURITY_PIN, DAILY_TODOS, QUICK_TODOS, SIDEBAR_TASKS, PASSWORDS];
+      let bytes = 0;
+      for (const k of keys) {
+        try {
+          const v = localStorage.getItem(k);
+          if (v) bytes += (k.length + v.length) * 2;
+        } catch {}
+      }
+      const kb = Math.max(0, Math.round(bytes / 1024));
+      const limitKb = 5120;
+      const pct = Math.min(100, Math.round((kb / Math.max(1, limitKb)) * 100));
+      return { kb, limitKb, pct, label: `تخزين تقريبي: ${kb}KB من ~${limitKb}KB (${pct}%)` };
+    }
+
+    function updateHomeStorageBar() {
+      const x = estimateStorageBreakdown();
+      const el = document.querySelector('#ptHomeStorageText');
+      const bar = document.querySelector('#ptHomeStorageBar');
+      if (el) el.textContent = x.label;
+      if (bar) bar.style.width = `${x.pct}%`;
+    }
+
+    function fillResponsibleFilter() {
+      const select = document.querySelector('#responsibleFilter');
+      const current = select.value || 'all';
+      const names = [...new Set(state.payload.items.map((i) => i.responsible).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ar'));
+      select.innerHTML = '<option value="all">كل المسؤولين</option>' + names.map((n) => `<option>${esc(n)}</option>`).join('');
+      select.value = names.includes(current) ? current : 'all';
+    }
+
+    function fillAgencyFilter() {
+      const select = document.querySelector('#agencyFilter');
+      if (!select) return;
+      const current = select.value || 'all';
+      const names = [...new Set(state.payload.items.map((i) => i.agency).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ar'));
+      select.innerHTML = '<option value="all">كل الجهات</option>' + names.map((n) => `<option>${esc(n)}</option>`).join('');
+      select.value = names.includes(current) ? current : 'all';
+    }
+
+    function exportResponsibleReport() {
+      const responsible = value('#responsibleFilter');
+      if (responsible === 'all') {
+        alert('اختر اسم مسؤول أولاً من فلتر "كل المسؤولين".');
+        return;
+      }
+      const report = buildResponsibleReport(responsible);
+      const csv = [
+        ['المسؤول', 'إجمالي المعاملات', 'منفذ', 'متعثر', 'قيد التنفيذ', 'إجمالي المراحل', 'مراحل منجزة', 'مراحل فاشلة'],
+        [report.name, report.totalCases, report.doneCases, report.failedCases, report.activeCases, report.totalActions, report.doneActions, report.failedActions]
+      ].map((r) => r.map((c) => `"${String(c)}"`).join(',')).join('\n');
+      download(`report-${safeName(report.name)}-${stamp()}.csv`, '\uFEFF' + csv, 'text/csv;charset=utf-8');
+      const html = createResponsibleReportHtml(report);
+      download(`report-${safeName(report.name)}-${stamp()}.doc`, '\uFEFF' + html, 'application/msword;charset=utf-8');
+      setSync(`تم تصدير تقرير المسؤول ${report.name}`);
+    }
+
+    function buildResponsibleReport(name) {
+      const t = today(0);
+      const cases = state.payload.items.filter((i) => i.responsible === name);
+      const doneCases = cases.filter((i) => i.status === 'مكتملة').length;
+      const failedCases = cases.filter((i) => i.status === 'مستند ناقص' || (i.followUp < t && i.status !== 'مكتملة')).length;
+      const activeCases = cases.length - doneCases - failedCases;
+      const actions = cases.flatMap((i) => i.actions || []);
+      return {
+        name,
+        totalCases: cases.length,
+        doneCases,
+        failedCases,
+        activeCases,
+        totalActions: actions.length,
+        doneActions: actions.filter((a) => a.status === 'منجز').length,
+        failedActions: actions.filter((a) => a.status === 'فشل').length,
+        cases
+      };
+    }
+
+    function exportPasswordsTxt() {
+      const items = loadPasswords().items;
+      if (!items.length) {
+        alert('لا توجد سجلات للتصدير.');
+        return;
+      }
+      const lines = items.map((i) => {
+        const cols = [i.title || '', i.username || '', i.password || '', i.url || '', (i.notes || '').replace(/\r?\n/g, ' ')];
+        return cols.map((c) => String(c).replace(/\t/g, ' ')).join('\t');
+      });
+      const body = ['العنوان\tاسم_المستخدم\tكلمة_المرور\tالرابط\tملاحظات', ...lines].join('\n');
+      download(`passwords-${stamp()}.txt`, '\uFEFF' + body, 'text/plain;charset=utf-8');
+      setSync('تم تصدير كلمات المرور (نص)');
+    }
+
+    function exportPasswordsExcel() {
+      const items = loadPasswords().items;
+      if (!items.length) {
+        alert('لا توجد سجلات للتصدير.');
+        return;
+      }
+      const headers = ['العنوان', 'اسم المستخدم', 'كلمة المرور', 'الرابط', 'ملاحظات'];
+      const rows = items.map((i) => [i.title || '', i.username || '', i.password || '', i.url || '', i.notes || '']);
+      const tableRows = [headers, ...rows].map((r, ridx) => `<tr>${r.map((c) => (ridx === 0 ? `<th>${esc(c)}</th>` : `<td>${esc(c)}</td>`)).join('')}</tr>`).join('');
+      const html = `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><style>
+        table{border-collapse:collapse;width:100%;font-family:Tahoma,Arial,sans-serif}
+        th,td{border:1px solid #cbd5e1;padding:6px;text-align:right;font-size:12px}
+        th{background:#e2e8f0}
+      </style></head><body><table>${tableRows}</table></body></html>`;
+      download(`passwords-${stamp()}.xls`, '\uFEFF' + html, 'application/vnd.ms-excel;charset=utf-8');
+      setSync('تم تصدير كلمات المرور (Excel)');
+    }
+
+    function loadHtml2PdfOnce() {
+      if (window.html2pdf) return Promise.resolve();
+      if (!html2PdfLoadPromise) {
+        html2PdfLoadPromise = new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+          s.crossOrigin = 'anonymous';
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error('pdf'));
+          document.head.appendChild(s);
+        });
+      }
+      return html2PdfLoadPromise;
+    }
+
+    async function downloadCasePdf(id) {
+      const item = state.payload.items.find((x) => x.id === id);
+      if (!item) return;
+      try {
+        await loadHtml2PdfOnce();
+      } catch {
+        alert('تعذر تحميل مكتبة PDF. تحقق من الإنترنت، أو استخدم «طباعة» ثم احفظ كـ PDF من المتصفح.');
+        return;
+      }
+      if (!window.html2pdf) {
+        alert('مكتبة PDF غير متوفرة.');
+        return;
+      }
+      const logoSrc = await resolveBayanLogoSrc();
+      const html = wrapPrintDocument(
+        `معاملة: ${item.title}`,
+        `<p class="meta">${esc(item.agency || '')} — مرجع: ${esc(item.reference || '')}</p>${createPrintableCasesFragment([item])}`,
+        logoSrc
+      );
+      const backdrop = document.createElement('div');
+      backdrop.style.cssText =
+        'position:fixed;inset:0;z-index:2147483645;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(11,17,32,0.94)';
+      const capLayer = document.createElement('div');
+      capLayer.style.cssText =
+        'position:absolute;inset:0;overflow:visible;pointer-events:none';
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('title', 'pdf-export');
+      iframe.setAttribute('lang', 'ar');
+      iframe.setAttribute('dir', 'rtl');
+      /* داخل نافذة العرض (ليس خارج الشاشة) — بعض المتصفحات لا تحسب تخطيط iframe بعيداً فيصبح PDF فارغاً */
+      iframe.style.cssText =
+        'position:absolute;left:0;top:0;width:794px;min-height:1123px;border:0;margin:0;padding:0;background:#fff;color:#111';
+      capLayer.appendChild(iframe);
+      backdrop.appendChild(capLayer);
+      const loadingMsg = document.createElement('span');
+      loadingMsg.style.cssText =
+        'position:relative;z-index:2;color:#fff;font-size:15px;font-weight:700;text-align:center';
+      loadingMsg.textContent = 'يتم تجهيز ملف PDF…';
+      backdrop.appendChild(loadingMsg);
+      document.body.appendChild(backdrop);
+      await new Promise((resolve) => {
+        const done = () => resolve();
+        iframe.onload = done;
+        iframe.srcdoc = html;
+        try {
+          const d = iframe.contentDocument;
+          if (d && d.readyState === 'complete') done();
+        } catch {}
+      });
+      const idoc = iframe.contentDocument;
+      const bodyEl = idoc && idoc.body;
+      if (!bodyEl) {
+        backdrop.remove();
+        alert('فشل تجهيز مستند PDF.');
+        return;
+      }
+      await Promise.all(
+        Array.from(idoc.images || []).map((img) =>
+          img.complete ? Promise.resolve() : new Promise((r) => { img.onload = () => r(); img.onerror = () => r(); })
+        )
+      );
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((r) => setTimeout(r, 380));
+      void bodyEl.offsetHeight;
+      idoc.documentElement && void idoc.documentElement.offsetHeight;
+      try {
+        const w = Math.max(bodyEl.scrollWidth, idoc.documentElement?.scrollWidth || 0, 794);
+        const h = Math.max(bodyEl.scrollHeight, bodyEl.offsetHeight, idoc.documentElement?.scrollHeight || 0, 1123);
+        await window
+          .html2pdf()
+          .set({
+            margin: [8, 8, 8, 8],
+            filename: `${safeName(item.title)}-${stamp()}.pdf`,
+            image: { type: 'jpeg', quality: 0.93 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              logging: false,
+              backgroundColor: '#ffffff',
+              scrollX: 0,
+              scrollY: 0,
+              windowWidth: w,
+              windowHeight: h
+            },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          })
+          .from(bodyEl)
+          .save();
+        setSync('تم تنزيل ملف PDF');
+      } catch (err) {
+        console.error(err);
+        alert('فشل إنشاء PDF. جرّب «طباعة» ثم اختر «حفظ كـ PDF».');
+      } finally {
+        backdrop.remove();
+      }
+    }
+
+    function ptGetPrintCommonCss() {
+      return `@page{size:A4;margin:12mm}*{box-sizing:border-box}html,body{margin:0;padding:0;height:auto;font-family:Tahoma,"Segoe UI",Arial,sans-serif;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}.pt-print-header{display:flex;align-items:center;gap:14px;border-bottom:2px solid #0d9488;padding-bottom:12px;margin-bottom:14px}.pt-print-logo{flex-shrink:0;display:flex;align-items:center}.pt-print-logo-img{display:block;max-height:56px;width:auto;object-fit:contain}.pt-print-brand{font-size:17px;font-weight:800;color:#0f172a}.pt-print-sub{font-size:12px;color:#475569;margin-top:4px}h1.title-prn{font-size:19px;margin:8px 0}.meta{color:#475569;font-size:12px;margin:0 0 14px}table.prn{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px;margin-top:6px}table.prn th,table.prn td{border:1px solid #94a3b8;padding:5px 6px;vertical-align:top;text-align:right;word-wrap:break-word;overflow-wrap:anywhere}table.prn th{background:#e2e8f0}tr{break-inside:avoid;page-break-inside:avoid}thead{display:table-header-group}tfoot{display:table-footer-group}h2.sec{font-size:14px;margin:14px 0 8px;color:#0f172a;border-bottom:1px solid #cbd5e1;padding-bottom:4px}.pt-print-break{page-break-before:always;padding-top:12px}`;
+    }
+
+    function ptLogoBlockHtml(logoSrc) {
+      const src = logoSrc == null ? BAYAN_LOGO_FILE : logoSrc;
+      const img = `<div class="pt-print-logo"><img class="pt-print-logo-img" src="${escAttr(src)}" alt="شركة بيان كابيتال" width="200" height="56" decoding="async" /></div>`;
+      return `<div class="pt-print-header">${img}<div><div class="pt-print-brand">Personal Tracker Pro</div><div class="pt-print-sub">Bayan Capital — لوحة المعاملات</div></div></div>`;
+    }
+
+    function wrapPrintDocument(title, innerBody, logoSrc) {
+      const logo = logoSrc === undefined ? BAYAN_LOGO_FILE : logoSrc;
+      return `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><style>${ptGetPrintCommonCss()}</style></head><body>${ptLogoBlockHtml(logo)}<h1 class="title-prn">${esc(title)}</h1><p class="meta">تاريخ المستند: ${new Date().toLocaleString('ar-SA')}</p>${innerBody}</body></html>`;
+    }
+
+    function createPrintableCasesFragment(items) {
+      const list = items || [];
+      const rows = list.flatMap((i) => {
+        const actions = (i.actions && i.actions.length)
+          ? i.actions
+          : [{ date: i.followUp || '', title: i.nextAction || 'لا توجد مرحلة', status: 'قيد التنفيذ' }];
+        return actions.map((a) => `<tr>
+          <td>${esc(i.title)}</td>
+          <td>${esc(i.agency || '')}</td>
+          <td>${esc(i.reference || '')}</td>
+          <td>${esc(i.responsible || '-')}</td>
+          <td>${esc(i.status)}</td>
+          <td>${esc(i.priority || '')}</td>
+          <td>${esc(i.caseDate || '')}</td>
+          <td>${esc(i.followUp || '')}</td>
+          <td>${esc(String(i.nextAction || '').slice(0, 140))}</td>
+          <td>${esc(a.date || '-')}</td>
+          <td>${esc(a.title || '-')}</td>
+          <td>${esc(a.status || '')}</td>
+        </tr>`);
+      });
+      if (!rows.length) return '<p class="meta">لا توجد معاملات.</p>';
+      return `<table class="prn"><thead><tr>
+        <th>المعاملة</th><th>الجهة</th><th>المرجع</th><th>المسؤول</th><th>الحالة</th><th>الأولوية</th><th>تاريخ المعاملة</th><th>المتابعة</th><th>الإجراء القادم</th>
+        <th>تاريخ المرحلة</th><th>عنوان المرحلة</th><th>حالة المرحلة</th>
+      </tr></thead><tbody>${rows.join('')}</tbody></table>`;
+    }
+
+    function createPrintableTasksFragment(items) {
+      const list = items || [];
+      if (!list.length) return '<p class="meta">لا توجد مهام.</p>';
+      const rows = list
+        .map(
+          (t) => `<tr>
+        <td>${esc(t.title)}</td>
+        <td>${esc((t.description || '').slice(0, 220))}</td>
+        <td>${esc(t.priority || '')}</td>
+        <td>${esc(t.status || '')}</td>
+        <td>${esc(fmtStDate(t.deadline))}</td>
+        <td>${esc(String(t.progress != null ? t.progress : 0))}%</td>
+      </tr>`
+        )
+        .join('');
+      return `<table class="prn"><thead><tr><th>المهمة</th><th>الوصف</th><th>الأولوية</th><th>الحالة</th><th>الموعد</th><th>التقدم</th></tr></thead><tbody>${rows}</tbody></table>`;
+    }
+
+    function createPrintableHtml(items, title) {
+      return wrapPrintDocument(title, createPrintableCasesFragment(items));
+    }
+
+    function createPrintableTasksHtml(items, title) {
+      return wrapPrintDocument(title, createPrintableTasksFragment(items));
+    }
+
+    function createReportsPrintBundle(scope) {
+      const title =
+        scope === 'cases' ? 'تقرير المعاملات' : scope === 'tasks' ? 'تقرير المهام' : 'تقرير المعاملات والمهام';
+      let inner = '';
+      if (scope === 'cases' || scope === 'all') {
+        const cases = state.payload.items.filter((x) => !x.archivedAt);
+        inner += `<h2 class="sec">المعاملات (${cases.length})</h2>${createPrintableCasesFragment(cases)}`;
+      }
+      if (scope === 'tasks' || scope === 'all') {
+        if (scope === 'all') inner += '<div class="pt-print-break"></div>';
+        const tasks = loadSidebarTasks().items || [];
+        inner += `<h2 class="sec">المهام (${tasks.length})</h2>${createPrintableTasksFragment(tasks)}`;
+      }
+      return wrapPrintDocument(title, inner);
+    }
+
+    function runReportsPrint() {
+      const sel = document.querySelector('#ptRepPrintScope');
+      const scope = sel?.value || 'cases';
+      printHtml(createReportsPrintBundle(scope));
+    }
+
+    function printDashboard() {
+      const html = createPrintableHtml(getFilteredRows(), 'طباعة قائمة المعاملات (حسب الفلاتر الحالية)');
+      printHtml(html);
+    }
+
+    function printCase(id) {
+      const item = state.payload.items.find((x) => x.id === id);
+      if (!item) return;
+      const html = createPrintableHtml([item], `طباعة المعاملة: ${item.title}`);
+      printHtml(html);
+    }
+
+    function printHtml(html) {
+      const w = window.open('', '_blank');
+      if (!w) {
+        alert('تعذر فتح نافذة الطباعة. تحقق من إعدادات المتصفح.');
+        return;
+      }
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+      setTimeout(() => {
+        try {
+          w.print();
+        } catch {}
+      }, 320);
+    }
+
+    function createResponsibleReportHtml(report) {
+      const caseRows = report.cases
+        .map((i) => `<tr><td>${esc(i.title)}</td><td>${esc(i.status)}</td><td>${esc(i.followUp)}</td><td>${esc(i.nextAction)}</td><td>${esc(actionsSummary(i.actions))}</td></tr>`)
+        .join('');
+      const inner = `<h2 class="sec">ملخص</h2><p class="meta">إجمالي المعاملات: ${report.totalCases} | منفذ: ${report.doneCases} | متعثر: ${report.failedCases} | قيد التنفيذ: ${report.activeCases}</p>
+      <p class="meta">إجمالي المراحل: ${report.totalActions} | مراحل منجزة: ${report.doneActions} | مراحل فاشلة: ${report.failedActions}</p>
+      <h2 class="sec">التفاصيل</h2>
+      <table class="prn"><thead><tr><th>المعاملة</th><th>الحالة</th><th>المتابعة</th><th>الإجراء القادم</th><th>ملخص المراحل</th></tr></thead><tbody>${caseRows}</tbody></table>`;
+      return wrapPrintDocument(`تقرير المسؤول: ${report.name}`, inner);
+    }
+
+    function normalizeActions(actions, nextAction, followUp) {
+      if (Array.isArray(actions) && actions.length) {
+        return actions
+          .map((a) => ({
+            date: a.date || followUp || today(0),
+            title: str(a.title),
+            status: normalizeActionStatus(a.status),
+            addedAt: a.addedAt || a.updatedAt || now(),
+            updatedAt: a.updatedAt || now(),
+            addedBy: str(a.addedBy)
+          }))
+          .filter((a) => a.title);
+      }
+      if (nextAction) {
+        return [{ date: followUp || today(0), title: str(nextAction), status: 'قيد التنفيذ', addedAt: now(), updatedAt: now(), addedBy: '' }];
+      }
+      return [];
+    }
+
+    function actionsSummary(actions) {
+      if (!actions || !actions.length) return 'لا توجد مراحل';
+      const done = actions.filter((a) => a.status === 'منجز').length;
+      const fail = actions.filter((a) => a.status === 'فشل').length;
+      const pending = actions.length - done - fail;
+      return `${actions.length} مرحلة (منجز ${done} / فشل ${fail} / قيد ${pending})`;
+    }
+
+    function actionsToInline(actions) {
+      return (actions || []).map((a) => `${a.date} - ${a.title} (${a.status})`).join(' ; ');
+    }
+
+    function normalizeActionStatus(v) {
+      const x = str(v);
+      if (x === 'منجز' || x === 'فشل' || x === 'قيد التنفيذ') return x;
+      if (x === 'مكتمل') return 'منجز';
+      if (x === 'failed') return 'فشل';
+      return 'قيد التنفيذ';
+    }
+
+    function normalizeIsoDate(v) {
+      if (!v) return '';
+      const m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      return m ? `${m[1]}-${m[2]}-${m[3]}` : '';
+    }
+
+    function safeName(v) {
+      return str(v).replace(/[^\w\u0600-\u06FF-]+/g, '_') || 'report';
+    }
+
+    function toggleTheme() {
+      const next = document.body.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem(THEME, next);
+      touchShellCloudIfOutbound();
+    }
+
+    function setupPin() {
+      const current = localStorage.getItem(SECURITY_PIN);
+      const msg = current ? 'أدخل رمز حماية جديد (4 أرقام على الأقل):' : 'أنشئ رمز حماية للحذف والتعديلات الحساسة:';
+      const pin = prompt(msg, '');
+      if (pin === null) return;
+      if (!/^\d{4,}$/.test(pin.trim())) {
+        alert('الرمز يجب أن يكون أرقامًا فقط وبحد أدنى 4 خانات.');
+        return;
+      }
+      localStorage.setItem(SECURITY_PIN, pin.trim());
+      touchShellCloudIfOutbound();
+      setSync('تم تحديث رمز الحماية');
+    }
+
+    function verifyPin(actionName) {
+      const stored = localStorage.getItem(SECURITY_PIN);
+      if (!stored) {
+        alert(`قبل ${actionName}، أنشئ رمز الحماية أولًا من زر "رمز الحماية".`);
+        return false;
+      }
+      const entered = prompt(`أدخل رمز الحماية لتنفيذ: ${actionName}`);
+      if (entered === null) return false;
+      if (entered.trim() !== stored) {
+        alert('رمز الحماية غير صحيح.');
+        return false;
+      }
+      return true;
+    }
+
+    function ptBindShellNavOnce() {
+      if (ptShellNavBound) return;
+      ptShellNavBound = true;
+      document.querySelector('.pt-nav-menu')?.addEventListener('click', (e) => {
+        if (e.target.closest('#ptNavExport')) {
+          document.querySelector('#backupBtn')?.click();
+          return;
+        }
+        if (e.target.closest('#ptNavImport')) {
+          document.querySelector('#importBtn')?.click();
+          return;
+        }
+        const btn = e.target.closest('.pt-nav-item[data-pt-page]');
+        if (!btn) return;
+        ptShowPage(btn.dataset.ptPage, btn);
+      });
+      const ptMain = document.querySelector('.pt-main');
+      ptMain?.addEventListener('click', (e) => {
+        if (e.target.closest('#ptQuickTodoAdd')) {
+          e.preventDefault();
+          ptAddQuickTodo();
+          return;
+        }
+        if (e.target.closest('#ptDailyTodoAdd')) {
+          e.preventDefault();
+          ptAddDailyTodo();
+          return;
+        }
+        if (e.target.closest('#ptDailyMoveFromYesterday')) {
+          e.preventDefault();
+          ptMoveYesterdayDailyTodos();
+          return;
+        }
+        if (e.target.closest('#ptPwdAddBtn')) {
+          e.preventDefault();
+          openPwdModal(null);
+          return;
+        }
+        const pwdCopy = e.target.closest('[data-pwd-copy]');
+        if (pwdCopy) {
+          e.preventDefault();
+          const pid = pwdCopy.getAttribute('data-pwd-copy');
+          const it = loadPasswords().items.find((x) => x.id === pid);
+          const pw = it?.password || '';
+          if (!pw) {
+            alert('لا توجد كلمة مرور في هذا السجل.');
+            return;
+          }
+          (navigator.clipboard?.writeText(pw) || Promise.reject())
+            .then(() => setSync('تم نسخ كلمة المرور'))
+            .catch(() => alert('تعذر النسخ — جرّب يدويًا أو اسمح للموقع بالوصول للحافظة.'));
+          return;
+        }
+        const pwdTog = e.target.closest('[data-pwd-toggle]');
+        if (pwdTog) {
+          e.preventDefault();
+          const row = pwdTog.closest('tr[data-pwd-row]');
+          const dots = row?.querySelector('.pt-pwd-dots');
+          const plain = row?.querySelector('.pt-pwd-plain');
+          if (!dots || !plain) return;
+          const show = plain.hasAttribute('hidden');
+          plain.toggleAttribute('hidden', !show);
+          dots.toggleAttribute('hidden', show);
+          pwdTog.textContent = show ? 'إخفاء' : 'إظهار';
+          return;
+        }
+        const pwdEdit = e.target.closest('[data-pwd-edit]');
+        if (pwdEdit) {
+          e.preventDefault();
+          openPwdModal(pwdEdit.getAttribute('data-pwd-edit'));
+          return;
+        }
+        const pwdDel = e.target.closest('[data-pwd-del]');
+        if (pwdDel) {
+          e.preventDefault();
+          const pid = pwdDel.getAttribute('data-pwd-del');
+          if (!confirm('حذف هذا السجل نهائيًا؟')) return;
+          const st = loadPasswords();
+          st.items = st.items.filter((x) => x.id !== pid);
+          try {
+            savePasswords(st);
+          } catch {
+            alert('تعذر الحفظ.');
+            return;
+          }
+          renderPasswordsTable();
+          updateHomeStorageBar();
+          return;
+        }
+        const filt = e.target.closest('#ptSidebarTaskFilters [data-st-filter]');
+        if (filt) {
+          e.preventDefault();
+          document.querySelectorAll('#ptSidebarTaskFilters [data-st-filter]').forEach((b) => b.classList.remove('is-active'));
+          filt.classList.add('is-active');
+          renderSidebarTasksTable();
+          return;
+        }
+        if (e.target.closest('#ptSidebarTaskAddBtn')) {
+          e.preventDefault();
+          openStTaskModal(null);
+          return;
+        }
+        const ed = e.target.closest('button[data-st-edit]');
+        if (ed) {
+          e.preventDefault();
+          openStTaskModal(ed.dataset.stEdit);
+          return;
+        }
+        const del = e.target.closest('button[data-st-del]');
+        if (del) {
+          e.preventDefault();
+          if (!confirm('حذف هذه المهمة؟')) return;
+          const sid = del.dataset.stDel;
+          const st = loadSidebarTasks();
+          st.items = st.items.filter((x) => x.id !== sid);
+          try {
+            saveSidebarTasks(st);
+          } catch {
+            alert('تعذر الحفظ.');
+            return;
+          }
+          renderSidebarTasksTable();
+          ptRefreshShell();
+          return;
+        }
+      });
+      ptMain?.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+        if (e.target && e.target.id === 'ptQuickTodoInput') {
+          e.preventDefault();
+          ptAddQuickTodo();
+        }
+        if (e.target && e.target.id === 'ptDailyTodoInput') {
+          e.preventDefault();
+          ptAddDailyTodo();
+        }
+      });
+      document.querySelector('#ptDailyTodoList')?.addEventListener('click', ptDailyTodoListClick);
+      document.querySelector('#ptQuickTodoList')?.addEventListener('click', ptQuickTodoListClick);
+      document.querySelector('#ptShellCalPrev')?.addEventListener('click', () => {
+        ptShellCalView.setMonth(ptShellCalView.getMonth() - 1);
+        ptRenderShellCalendar();
+      });
+      document.querySelector('#ptShellCalNext')?.addEventListener('click', () => {
+        ptShellCalView.setMonth(ptShellCalView.getMonth() + 1);
+        ptRenderShellCalendar();
+      });
+      document.querySelector('#ptShellCalMonthPick')?.addEventListener('change', (e) => {
+        const v = e.target.value;
+        if (!v) return;
+        const [y, m] = v.split('-').map(Number);
+        if (!y || !m) return;
+        ptShellCalView = new Date(y, m - 1, 1);
+        ptRenderShellCalendar();
+      });
+      document.querySelector('#ptShellCalToday')?.addEventListener('click', () => {
+        ptShellCalView = new Date();
+        ptCalSelectedIso = today(0);
+        ptRenderShellCalendar();
+        ptOpenCalDayPanel(today(0));
+      });
+      document.querySelector('#ptShellCalGrid')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.pt-cal-day[data-date]');
+        if (!btn) return;
+        const ds = btn.dataset.date;
+        ptCalSelectedIso = ds;
+        ptRenderShellCalendar();
+        ptOpenCalDayPanel(ds);
+      });
+      document.querySelector('#ptCalPanelClose')?.addEventListener('click', () => {
+        ptCloseCalDayPanel();
+      });
+      document.querySelector('#ptDailyCasesTable')?.addEventListener('click', (e) => {
+        const b = e.target.closest('button[data-open-case]');
+        if (!b) return;
+        const navBtn = document.querySelector('.pt-nav-item[data-pt-page="transactions"]');
+        ptShowPage('transactions', navBtn);
+        const item = state.payload.items.find((x) => x.id === b.dataset.openCase);
+        if (item) openModal(item);
+      });
+      document.querySelector('#ptSidebarTaskSearch')?.addEventListener('input', () => renderSidebarTasksTable());
+      document.querySelector('#ptTaskForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitStTask();
+      });
+      document.querySelector('#ptSidebarTaskCancelBtn')?.addEventListener('click', closeStTaskModal);
+      document.querySelector('#ptSidebarTaskCloseBtn')?.addEventListener('click', closeStTaskModal);
+      document.querySelector('#ptTaskModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'ptTaskModal') closeStTaskModal();
+      });
+      document.querySelector('#ptPwdForm')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitPwdForm();
+      });
+      document.querySelector('#ptPwdCancelBtn')?.addEventListener('click', closePwdModal);
+      document.querySelector('#ptPwdCloseBtn')?.addEventListener('click', closePwdModal);
+      document.querySelector('#ptPwdModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'ptPwdModal') closePwdModal();
+      });
+    }
+
+    function ptShowPage(slug, btn) {
+      document.querySelectorAll('.pt-main > .pt-page').forEach((p) => p.classList.remove('is-active'));
+      const page = document.getElementById(`pt-page-${slug}`);
+      if (page) page.classList.add('is-active');
+      document.querySelectorAll('.pt-nav-item[data-pt-page]').forEach((b) => b.classList.remove('is-active'));
+      const navBtn = btn?.classList ? btn : document.querySelector(`.pt-nav-item[data-pt-page="${slug}"]`);
+      if (navBtn) navBtn.classList.add('is-active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (slug === 'calendar') ptRenderShellCalendar();
+      if (slug === 'passwords') renderPasswordsTable();
+      if (slug === 'dashboard' || slug === 'daily' || slug === 'tasks' || slug === 'reports') ptRefreshShell();
+    }
+
+    function ptOpenItems() {
+      return state.payload.items.filter((x) => !x.archivedAt);
+    }
+
+    function loadDailyTodoBuckets() {
+      try {
+        const r = localStorage.getItem(DAILY_TODOS);
+        return r ? JSON.parse(r) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveDailyTodoBuckets(obj) {
+      localStorage.setItem(DAILY_TODOS, JSON.stringify(obj));
+      touchShellCloudIfOutbound();
+    }
+
+    function loadQuickTodos() {
+      try {
+        const r = localStorage.getItem(QUICK_TODOS);
+        const p = r ? JSON.parse(r) : { items: [] };
+        return Array.isArray(p.items) ? p : { items: [] };
+      } catch {
+        return { items: [] };
+      }
+    }
+
+    function saveQuickTodos(obj) {
+      localStorage.setItem(QUICK_TODOS, JSON.stringify({ items: obj.items || [] }));
+      touchShellCloudIfOutbound();
+    }
+
+    function loadSidebarTasks() {
+      try {
+        const r = localStorage.getItem(SIDEBAR_TASKS);
+        const p = r ? JSON.parse(r) : { items: [] };
+        return Array.isArray(p.items) ? p : { items: [] };
+      } catch {
+        return { items: [] };
+      }
+    }
+
+    function saveSidebarTasks(obj) {
+      localStorage.setItem(SIDEBAR_TASKS, JSON.stringify({ items: obj.items || [] }));
+      touchShellCloudIfOutbound();
+    }
+
+    function loadPasswords() {
+      try {
+        const r = localStorage.getItem(PASSWORDS);
+        const p = r ? JSON.parse(r) : { items: [] };
+        return Array.isArray(p.items) ? p : { items: [] };
+      } catch {
+        return { items: [] };
+      }
+    }
+
+    function savePasswords(obj) {
+      localStorage.setItem(PASSWORDS, JSON.stringify({ items: obj.items || [] }));
+      touchShellCloudIfOutbound();
+    }
+
+    function closePwdModal() {
+      document.querySelector('#ptPwdModal')?.classList.remove('open');
+    }
+
+    function openPwdModal(recId) {
+      const modal = document.querySelector('#ptPwdModal');
+      if (!modal) return;
+      const titleEl = document.querySelector('#ptPwdModalTitle');
+      fill('#pwId', '');
+      fill('#pwTitle', '');
+      fill('#pwUsername', '');
+      fill('#pwPassword', '');
+      fill('#pwUrl', '');
+      fill('#pwNotes', '');
+      if (recId) {
+        const t = loadPasswords().items.find((x) => x.id === recId);
+        if (t) {
+          if (titleEl) titleEl.textContent = 'تعديل السجل';
+          fill('#pwId', t.id);
+          fill('#pwTitle', t.title || '');
+          fill('#pwUsername', t.username || '');
+          fill('#pwPassword', t.password || '');
+          fill('#pwUrl', t.url || '');
+          fill('#pwNotes', t.notes || '');
+        } else {
+          alert('السجل غير موجود.');
+          return;
+        }
+      } else if (titleEl) titleEl.textContent = 'سجل جديد';
+      modal.classList.add('open');
+      document.querySelector('#pwTitle')?.focus();
+    }
+
+    function submitPwdForm() {
+      const title = (value('#pwTitle') || '').trim();
+      if (!title) {
+        alert('أدخل عنوانًا للخدمة.');
+        return;
+      }
+      const st = loadPasswords();
+      const id = (value('#pwId') || '').trim();
+      const rec = {
+        id: id || uid(),
+        title,
+        username: (value('#pwUsername') || '').trim(),
+        password: value('#pwPassword') || '',
+        url: (value('#pwUrl') || '').trim(),
+        notes: (value('#pwNotes') || '').trim(),
+        updatedAt: now()
+      };
+      if (id) {
+        const idx = st.items.findIndex((x) => x.id === id);
+        if (idx >= 0) {
+          rec.createdAt = st.items[idx].createdAt || now();
+          st.items[idx] = rec;
+        }
+      } else {
+        rec.createdAt = now();
+        st.items.unshift(rec);
+      }
+      try {
+        savePasswords(st);
+      } catch {
+        alert('تعذر الحفظ في المتصفح.');
+        return;
+      }
+      closePwdModal();
+      renderPasswordsTable();
+      updateHomeStorageBar();
+    }
+
+    function renderPasswordsTable() {
+      const body = document.getElementById('ptPasswordsBody');
+      if (!body) return;
+      const rows = loadPasswords().items.slice();
+      if (!rows.length) {
+        body.innerHTML = '<tr><td colspan="6"><p class="pt-empty-soft" style="margin:0;padding:16px 0">لا توجد سجلات بعد.</p></td></tr>';
+        return;
+      }
+      body.innerHTML = rows
+        .map((r) => {
+          const pass = r.password || '';
+          const masked = '••••••';
+          const u = (r.url || '').trim();
+          let linkCell = '—';
+          if (u) {
+            const href = /^https?:\/\//i.test(u) ? u : `https://${u}`;
+            linkCell = `<a href="${escAttr(href)}" target="_blank" rel="noopener noreferrer">فتح</a>`;
+          }
+          return `<tr data-pwd-row="${escAttr(r.id)}">
+          <td><strong>${esc(r.title)}</strong></td>
+          <td>${esc(r.username || '—')}</td>
+          <td class="pt-pwd-pass-cell">
+            <span class="pt-pwd-dots">${masked}</span>
+            <span class="pt-pwd-plain" hidden>${esc(pass)}</span>
+            <button type="button" class="pt-btn-secondary" style="margin-top:6px;padding:4px 8px;font-size:0.72rem" data-pwd-toggle="${escAttr(r.id)}">إظهار</button>
+          </td>
+          <td>${linkCell}</td>
+          <td>${esc((r.notes || '').slice(0, 80))}${(r.notes || '').length > 80 ? '…' : ''}</td>
+          <td><div class="pt-pwd-actions">
+            <button type="button" class="pt-btn-secondary" style="padding:6px 10px;font-size:0.75rem" data-pwd-copy="${escAttr(r.id)}">نسخ</button>
+            <button type="button" class="pt-btn-secondary" style="padding:6px 10px;font-size:0.75rem" data-pwd-edit="${escAttr(r.id)}">تعديل</button>
+            <button type="button" class="pt-btn-secondary" style="padding:6px 10px;font-size:0.75rem" data-pwd-del="${escAttr(r.id)}">حذف</button>
+          </div></td>
+        </tr>`;
+        })
+        .join('');
+    }
+
+    function fmtStDate(iso) {
+      if (!iso) return '—';
+      const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!m) return iso;
+      return `${Number(m[3])}/${Number(m[2])}/${m[1]}`;
+    }
+
+    function stStatusBadgeClass(st) {
+      if (st === 'مكتملة') return 'done';
+      if (st === 'جارية') return 'run';
+      return 'wait';
+    }
+
+    function stPriDotClass(pr) {
+      if (pr === 'عالية') return 'high';
+      if (pr === 'متوسطة') return 'mid';
+      return 'low';
+    }
+
+    function fillStLinkedCaseSelect() {
+      const sel = document.querySelector('#stLinkedCase');
+      if (!sel) return;
+      const cur = sel.value;
+      const items = ptOpenItems();
+      sel.innerHTML = '<option value="">— لا شيء —</option>' + items.map((i) => `<option value="${escAttr(i.id)}">${esc(i.title)}</option>`).join('');
+      if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
+    }
+
+    function closeStTaskModal() {
+      document.querySelector('#ptTaskModal')?.classList.remove('open');
+    }
+
+    function openStTaskModal(taskId) {
+      const modal = document.querySelector('#ptTaskModal');
+      if (!modal) return;
+      fillStLinkedCaseSelect();
+      const titleEl = document.querySelector('#ptTaskModalTitle');
+      if (!taskId) {
+        if (titleEl) titleEl.textContent = 'مهمة جديدة';
+        fill('#stTaskId', '');
+        fill('#stTitle', '');
+        fill('#stDesc', '');
+        fill('#stPriority', 'متوسطة');
+        fill('#stStatus', 'قيد الانتظار');
+        fill('#stDeadline', today(0));
+        fill('#stProgress', '0');
+        fill('#stLinkedCase', '');
+      } else {
+        const t = loadSidebarTasks().items.find((x) => x.id === taskId);
+        if (!t) return;
+        if (titleEl) titleEl.textContent = 'تعديل مهمة';
+        fill('#stTaskId', t.id);
+        fill('#stTitle', t.title || '');
+        fill('#stDesc', t.description || '');
+        fill('#stPriority', t.priority || 'متوسطة');
+        fill('#stStatus', t.status || 'قيد الانتظار');
+        fill('#stDeadline', t.deadline || today(0));
+        fill('#stProgress', String(Math.min(100, Math.max(0, Number(t.progress) || 0))));
+        fill('#stLinkedCase', t.linkedCaseId || '');
+      }
+      modal.classList.add('open');
+    }
+
+    function submitStTask() {
+      const title = (value('#stTitle') || '').trim();
+      if (!title) {
+        alert('أدخل عنوان المهمة.');
+        return;
+      }
+      const desc = (value('#stDesc') || '').trim();
+      const priority = value('#stPriority') || 'متوسطة';
+      const status = value('#stStatus') || 'قيد الانتظار';
+      const deadline = normalizeIsoDate(value('#stDeadline')) || today(0);
+      let prog = Number(value('#stProgress'));
+      if (Number.isNaN(prog)) prog = 0;
+      prog = Math.min(100, Math.max(0, prog));
+      const linked = value('#stLinkedCase') || '';
+      const idExisting = (value('#stTaskId') || '').trim();
+      const store = loadSidebarTasks();
+      if (idExisting) {
+        const idx = store.items.findIndex((x) => x.id === idExisting);
+        if (idx >= 0) {
+          store.items[idx] = {
+            ...store.items[idx],
+            title,
+            description: desc,
+            priority,
+            status,
+            deadline,
+            progress: prog,
+            linkedCaseId: linked,
+            updatedAt: now(),
+          };
+        }
+      } else {
+        store.items.unshift({
+          id: uid(),
+          title,
+          description: desc,
+          priority,
+          status,
+          deadline,
+          progress: prog,
+          linkedCaseId: linked,
+          createdAt: now(),
+          updatedAt: now(),
+        });
+      }
+      try {
+        saveSidebarTasks(store);
+      } catch {
+        alert('تعذر حفظ المهام في المتصفح.');
+        return;
+      }
+      closeStTaskModal();
+      renderSidebarTasksTable();
+      ptRefreshShell();
+    }
+
+    function renderSidebarTasksTable() {
+      const body = document.getElementById('ptSidebarTasksBody');
+      if (!body) return;
+      const filterBtn = document.querySelector('#ptSidebarTaskFilters .pt-filter-btn.is-active');
+      const filter = filterBtn?.dataset?.stFilter || 'all';
+      const q = (document.querySelector('#ptSidebarTaskSearch')?.value || '').trim().toLowerCase();
+      let rows = loadSidebarTasks().items.slice();
+      if (q) {
+        rows = rows.filter((x) => `${x.title} ${x.description || ''}`.toLowerCase().includes(q));
+      }
+      if (filter === 'pending') rows = rows.filter((x) => x.status === 'قيد الانتظار');
+      else if (filter === 'progress') rows = rows.filter((x) => x.status === 'جارية');
+      else if (filter === 'done') rows = rows.filter((x) => x.status === 'مكتملة');
+      else if (filter === 'high') rows = rows.filter((x) => x.priority === 'عالية');
+      if (!rows.length) {
+        body.innerHTML = '<tr><td colspan="7"><p class="pt-empty-soft" style="margin:0;padding:16px 0">لا مهام مطابقة.</p></td></tr>';
+        return;
+      }
+      body.innerHTML = rows.map((t) => {
+        const p = Math.min(100, Math.max(0, Number(t.progress) || 0));
+        const fillClass = p >= 100 ? 'pt-prog-fill green' : p >= 50 ? 'pt-prog-fill' : 'pt-prog-fill orange';
+        return `<tr>
+          <td><strong>${esc(t.title)}</strong></td>
+          <td>${esc((t.description || '').slice(0, 80))}${(t.description || '').length > 80 ? '…' : ''}</td>
+          <td><span class="pt-pri-dot ${stPriDotClass(t.priority)}"></span>${esc(t.priority || 'متوسطة')}</td>
+          <td><span class="pt-st-badge ${stStatusBadgeClass(t.status)}">${esc(t.status || '')}</span></td>
+          <td>${esc(fmtStDate(t.deadline))}</td>
+          <td class="pt-prog-wrap"><div class="pt-prog-bar"><div class="${fillClass}" style="width:${p}%"></div></div><div class="pt-prog-pct">${p}%</div></td>
+          <td><div class="pt-st-actions">
+            <button type="button" class="pt-st-act edit" data-st-edit="${escAttr(t.id)}" title="تعديل"><i class="fas fa-pencil-alt"></i></button>
+            <button type="button" class="pt-st-act del" data-st-del="${escAttr(t.id)}" title="حذف"><i class="fas fa-trash-alt"></i></button>
+          </div></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function ptMoveYesterdayDailyTodos() {
+      const yKey = today(-1);
+      const tKey = today(0);
+      const all = loadDailyTodoBuckets();
+      const yest = all[yKey]?.items || [];
+      const pending = yest.filter((x) => !x.done);
+      if (!pending.length) {
+        alert('لا توجد مهام غير منجزة من أمس لنقلها.');
+        return;
+      }
+      if (!confirm(`نقل ${pending.length} مهمة غير منجزة من أمس إلى قائمة اليوم؟`)) return;
+      if (!all[tKey]) all[tKey] = { items: [] };
+      for (const x of pending) {
+        all[tKey].items.push({ id: uid(), text: x.text, done: false });
+      }
+      const kept = yest.filter((x) => x.done);
+      if (kept.length) all[yKey] = { items: kept };
+      else delete all[yKey];
+      try {
+        saveDailyTodoBuckets(all);
+      } catch {
+        alert('تعذر الحفظ في المتصفح.');
+        return;
+      }
+      ptRefreshShell();
+      alert(`تم نقل ${pending.length} مهمة إلى اليوم.`);
+    }
+
+    function ptAddDailyTodo() {
+      const inp = document.querySelector('#ptDailyTodoInput');
+      const tx = (inp?.value || '').trim();
+      if (!tx) {
+        alert('اكتب نص المهمة في الحقل ثم اضغط «إضافة لليوم».');
+        inp?.focus();
+        return;
+      }
+      const key = today(0);
+      const all = loadDailyTodoBuckets();
+      if (!all[key]) all[key] = { items: [] };
+      all[key].items.push({ id: uid(), text: tx, done: false });
+      try {
+        saveDailyTodoBuckets(all);
+      } catch (err) {
+        alert('تعذر الحفظ في المتصفح (مساحة التخزين قد تكون ممتلئة).');
+        return;
+      }
+      inp.value = '';
+      ptRefreshShell();
+    }
+
+    function ptAddQuickTodo() {
+      const inp = document.querySelector('#ptQuickTodoInput');
+      const tx = (inp?.value || '').trim();
+      if (!tx) {
+        alert('اكتب نص المهمة في الحقل ثم اضغط «إضافة».');
+        inp?.focus();
+        return;
+      }
+      const q = loadQuickTodos();
+      q.items.unshift({ id: uid(), text: tx, done: false, createdAt: now() });
+      try {
+        saveQuickTodos(q);
+      } catch (err) {
+        alert('تعذر الحفظ في المتصفح (مساحة التخزين قد تكون ممتلئة).');
+        return;
+      }
+      inp.value = '';
+      ptRefreshShell();
+    }
+
+    function ptDailyTodoListClick(e) {
+      if (e.target.closest('.pt-todo-del')) {
+        const id = e.target.closest('.pt-todo-del').dataset.id;
+        const key = today(0);
+        const all = loadDailyTodoBuckets();
+        if (all[key]?.items) all[key].items = all[key].items.filter((x) => x.id !== id);
+        saveDailyTodoBuckets(all);
+        ptRefreshShell();
+        return;
+      }
+      const row = e.target.closest('.pt-todo-row');
+      if (row && e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
+        const id = row.dataset.id;
+        const key = today(0);
+        const all = loadDailyTodoBuckets();
+        const it = all[key]?.items?.find((x) => x.id === id);
+        if (it) it.done = e.target.checked;
+        saveDailyTodoBuckets(all);
+        row.classList.toggle('done', !!it?.done);
+      }
+    }
+
+    function ptQuickTodoListClick(e) {
+      if (e.target.closest('.pt-todo-del')) {
+        const id = e.target.closest('.pt-todo-del').dataset.id;
+        const q = loadQuickTodos();
+        q.items = q.items.filter((x) => x.id !== id);
+        saveQuickTodos(q);
+        ptRefreshShell();
+        return;
+      }
+      const row = e.target.closest('.pt-todo-row');
+      if (row && e.target.tagName === 'INPUT' && e.target.type === 'checkbox') {
+        const id = row.dataset.id;
+        const q = loadQuickTodos();
+        const it = q.items.find((x) => x.id === id);
+        if (it) it.done = e.target.checked;
+        saveQuickTodos(q);
+        row.classList.toggle('done', !!it?.done);
+      }
+    }
+
+    function ptRefreshShell() {
+      const all = ptOpenItems();
+      const t = today(0);
+      const total = all.length;
+      const done = all.filter((x) => x.status === 'مكتملة').length;
+      const open = total - done;
+      const todayCount = all.filter((x) => x.followUp === t && x.status !== 'مكتملة').length;
+      const overdue = all.filter((x) => x.followUp < t && x.status !== 'مكتملة').length;
+
+      const setText = (id, v) => {
+        const n = document.getElementById(id);
+        if (n) n.textContent = String(v);
+      };
+      setText('ptBadgeTrans', total);
+      const stOpen = loadSidebarTasks().items.filter((x) => x.status !== 'مكتملة').length;
+      setText('ptBadgeQuick', stOpen);
+
+      setText('ptDashTotal', total);
+      setText('ptDashOpen', open);
+      setText('ptDashToday', todayCount);
+      setText('ptDashOverdue', overdue);
+
+      const wrap = document.getElementById('ptDailyCasesTable');
+      if (wrap) {
+        const todayCases = all.filter((x) => x.followUp === t && x.status !== 'مكتملة');
+        if (!todayCases.length) {
+          wrap.innerHTML = '<p class="pt-empty-soft">لا توجد معاملات بمتابعة اليوم.</p>';
+        } else {
+          wrap.innerHTML = `
+            <table class="pt-table-mini"><thead><tr>
+              <th>المعاملة</th><th>الجهة</th><th>الحالة</th><th>الإجراء القادم</th><th></th>
+            </tr></thead><tbody>
+            ${todayCases.map((i) => `
+              <tr>
+                <td>${esc(i.title)}</td>
+                <td>${esc(i.agency)}</td>
+                <td>${esc(i.status)}</td>
+                <td>${esc(String(i.nextAction || '').slice(0, 100))}${String(i.nextAction || '').length > 100 ? '…' : ''}</td>
+                <td><button type="button" class="pt-btn-primary" style="padding:8px 12px;font-size:0.78rem" data-open-case="${i.id}">فتح</button></td>
+              </tr>`).join('')}
+            </tbody></table>`;
+        }
+      }
+
+      const key = today(0);
+      const bucket = loadDailyTodoBuckets()[key]?.items || [];
+      const dList = document.getElementById('ptDailyTodoList');
+      if (dList) {
+        dList.innerHTML = bucket.length
+          ? bucket.map((x) => `
+            <li class="pt-todo-row ${x.done ? 'done' : ''}" data-id="${x.id}">
+              <input type="checkbox" ${x.done ? 'checked' : ''} aria-label="تم">
+              <span>${esc(x.text)}</span>
+              <button type="button" class="pt-todo-del" data-id="${x.id}" title="حذف">×</button>
+            </li>`).join('')
+          : '<li class="pt-empty-soft" style="list-style:none">لا عناصر بعد.</li>';
+      }
+
+      const qList = document.getElementById('ptQuickTodoList');
+      if (qList) {
+        const qi = loadQuickTodos().items;
+        qList.innerHTML = qi.length
+          ? qi.map((x) => `
+            <li class="pt-todo-row ${x.done ? 'done' : ''}" data-id="${x.id}">
+              <input type="checkbox" ${x.done ? 'checked' : ''} aria-label="تم">
+              <span>${esc(x.text)}</span>
+              <button type="button" class="pt-todo-del" data-id="${x.id}" title="حذف">×</button>
+            </li>`).join('')
+          : '<li class="pt-empty-soft" style="list-style:none">لا مهام سريعة بعد.</li>';
+      }
+
+      const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+      const yNow = new Date().getFullYear();
+      const monthCounts = Array(12).fill(0);
+      for (const i of all) {
+        if (i.status === 'مكتملة' || !i.followUp) continue;
+        const y = Number(i.followUp.slice(0, 4));
+        const m = Number(i.followUp.slice(5, 7)) - 1;
+        if (y === yNow && m >= 0 && m < 12) monthCounts[m] += 1;
+      }
+      const maxC = Math.max(1, ...monthCounts);
+      const chart = document.getElementById('ptShellChart');
+      if (chart) {
+        const plotH = 188;
+        const inner = monthCounts
+          .map((c, idx) => {
+            const px = c === 0 ? 4 : Math.max(8, Math.round((c / maxC) * plotH));
+            const z = c === 0 ? ' pt-chart-zero' : '';
+            return `<div class="pt-chart-col${z}" title="${monthNames[idx]}: ${c} معاملة">
+              <span class="pt-chart-val">${c > 0 ? c : ''}</span>
+              <div class="pt-chart-bar" style="height:${px}px" aria-hidden="true"></div>
+              <span class="pt-chart-mon">${monthNames[idx]}</span>
+            </div>`;
+          })
+          .join('');
+        chart.innerHTML = `
+          <div class="pt-chart-y" aria-hidden="true">
+            <span>${maxC}</span>
+            <span>${Math.ceil(maxC / 2)}</span>
+            <span>0</span>
+          </div>
+          <div class="pt-chart-plot">
+            <div class="pt-chart-bars">${inner}</div>
+            <div class="pt-chart-baseline"></div>
+          </div>`;
+      }
+
+      const fu = document.getElementById('ptShellFollowups');
+      if (fu) {
+        const upcoming = all.filter((x) => x.status !== 'مكتملة').sort((a, b) => a.followUp.localeCompare(b.followUp)).slice(0, 8);
+        fu.innerHTML = upcoming.length
+          ? upcoming.map((i) => `<div class="pt-act-row"><strong>${esc(i.title)}</strong><div style="color:#8b9bb4;font-size:0.8rem;margin-top:4px">${prettyDate(i.followUp)} — ${esc(i.status)}</div></div>`).join('')
+          : '<div class="pt-empty-soft">لا بيانات</div>';
+      }
+
+      const rs = document.getElementById('ptShellRepStatus');
+      const rp = document.getElementById('ptShellRepPriority');
+      if (rs && rp) {
+        const statusOrder = ['قيد التنفيذ', 'بانتظار رد', 'بانتظار سداد', 'مستند ناقص', 'مكتملة'];
+        const stHtml = statusOrder.map((s) => {
+          const c = all.filter((x) => x.status === s).length;
+          const pct = total ? Math.round((c / total) * 100) : 0;
+          const col = s === 'مكتملة' ? '#22c55e' : s === 'مستند ناقص' ? '#f97316' : '#3b82f6';
+          return `<div class="pt-report-bar"><div class="pt-rb-top"><span>${esc(s)}</span><span>${c} (${pct}%)</span></div><div class="pt-rb-track"><div class="pt-rb-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
+        }).join('');
+        rs.innerHTML = stHtml || '<p class="pt-empty-soft">لا بيانات</p>';
+        const pr = ['عالية', 'متوسطة', 'منخفضة'];
+        rp.innerHTML = pr.map((s) => {
+          const c = all.filter((x) => x.priority === s).length;
+          const pct = total ? Math.round((c / total) * 100) : 0;
+          return `<div class="pt-report-bar"><div class="pt-rb-top"><span>${esc(s)}</span><span>${c} (${pct}%)</span></div><div class="pt-rb-track"><div class="pt-rb-fill" style="width:${pct}%;background:#8b5cf6"></div></div></div>`;
+        }).join('');
+      }
+
+      updateHomeStorageBar();
+      if (document.getElementById('pt-page-calendar')?.classList.contains('is-active')) ptRenderShellCalendar();
+      if (document.getElementById('pt-page-passwords')?.classList.contains('is-active')) renderPasswordsTable();
+      renderSidebarTasksTable();
+    }
+
+    function ptHijriMonthYearLine(d) {
+      try {
+        return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { month: 'long', year: 'numeric' }).format(d);
+      } catch {
+        return '';
+      }
+    }
+
+    function ptHijriDayLineForIso(iso) {
+      try {
+        const d = new Date(`${iso}T12:00:00`);
+        return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+      } catch {
+        return '';
+      }
+    }
+
+    function ptHijriDayNumberOnly(iso) {
+      try {
+        const d = new Date(`${iso}T12:00:00`);
+        const parts = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric' }).formatToParts(d);
+        return parts.find((p) => p.type === 'day')?.value || '';
+      } catch {
+        return '';
+      }
+    }
+
+    function ptCalEmptyMetric() {
+      return { follow: [], caseHits: [], tasks: [], dailyItems: [], quickN: 0 };
+    }
+
+    function ptCalMetricsForMonth(year, month0) {
+      const metrics = {};
+      const pref = `${year}-${String(month0 + 1).padStart(2, '0')}`;
+      const touch = (iso) => {
+        if (!metrics[iso]) metrics[iso] = ptCalEmptyMetric();
+        return metrics[iso];
+      };
+
+      for (const x of ptOpenItems()) {
+        if (x.status === 'مكتملة') continue;
+        if (x.followUp && String(x.followUp).startsWith(pref)) touch(x.followUp).follow.push(x);
+        if (x.caseDate && String(x.caseDate).startsWith(pref) && x.caseDate !== x.followUp) touch(x.caseDate).caseHits.push(x);
+      }
+
+      for (const t of loadSidebarTasks().items) {
+        if (!t.deadline || t.status === 'مكتملة') continue;
+        const dl = normalizeIsoDate(t.deadline) || String(t.deadline).slice(0, 10);
+        if (dl && dl.startsWith(pref)) touch(dl).tasks.push(t);
+      }
+
+      const buckets = loadDailyTodoBuckets();
+      for (const [k, v] of Object.entries(buckets)) {
+        if (!k.startsWith(pref)) continue;
+        const items = v?.items || [];
+        if (items.length) touch(k).dailyItems = items;
+      }
+
+      const t0 = today(0);
+      if (t0.startsWith(pref)) {
+        const q = loadQuickTodos().items.filter((it) => !it.done);
+        if (q.length) touch(t0).quickN = q.length;
+      }
+
+      return metrics;
+    }
+
+    function ptCalBadgeHtml(m) {
+      const parts = [];
+      if (m.follow.length)
+        parts.push(`<span class="pt-cal-ic" title="متابعة"><i class="fas fa-calendar-check" aria-hidden="true"></i><small>${m.follow.length}</small></span>`);
+      if (m.caseHits.length)
+        parts.push(`<span class="pt-cal-ic pt-cal-ic-case" title="تاريخ تسجيل المعاملة"><i class="fas fa-file-alt" aria-hidden="true"></i><small>${m.caseHits.length}</small></span>`);
+      if (m.tasks.length)
+        parts.push(`<span class="pt-cal-ic pt-cal-ic-task" title="مهام الجدول"><i class="fas fa-tasks" aria-hidden="true"></i><small>${m.tasks.length}</small></span>`);
+      if (m.dailyItems.length)
+        parts.push(`<span class="pt-cal-ic pt-cal-ic-daily" title="قائمة يومية"><i class="fas fa-list-ul" aria-hidden="true"></i><small>${m.dailyItems.length}</small></span>`);
+      if (m.quickN)
+        parts.push(`<span class="pt-cal-ic pt-cal-ic-quick" title="مهام سريعة (اليوم)"><i class="fas fa-bolt" aria-hidden="true"></i><small>${m.quickN}</small></span>`);
+      if (!parts.length) return '';
+      return `<div class="pt-cal-badges">${parts.join('')}</div>`;
+    }
+
+    function ptCloseCalDayPanel() {
+      ptCalSelectedIso = null;
+      const p = document.getElementById('ptCalDayPanel');
+      if (p) {
+        p.classList.remove('is-open');
+        p.setAttribute('aria-hidden', 'true');
+      }
+      ptRenderShellCalendar();
+    }
+
+    function ptOpenCalDayPanel(iso) {
+      const panel = document.getElementById('ptCalDayPanel');
+      const title = document.getElementById('ptCalPanelTitle');
+      const body = document.getElementById('ptCalPanelBody');
+      if (!panel || !title || !body) return;
+      const hj = ptHijriDayLineForIso(iso);
+      title.textContent = hj ? `${prettyDate(iso)} — ${hj}` : prettyDate(iso);
+
+      const follow = ptOpenItems().filter((x) => x.status !== 'مكتملة' && x.followUp === iso);
+      const caseOnly = ptOpenItems().filter((x) => x.status !== 'مكتملة' && x.caseDate === iso && x.followUp !== iso);
+      const tasks = loadSidebarTasks().items.filter((t) => {
+        if (t.status === 'مكتملة' || !t.deadline) return false;
+        const dl = normalizeIsoDate(t.deadline) || String(t.deadline).slice(0, 10);
+        return dl === iso;
+      });
+      const daily = loadDailyTodoBuckets()[iso]?.items || [];
+      const quick = iso === today(0) ? loadQuickTodos().items.filter((q) => !q.done) : [];
+
+      const sec = [];
+      if (follow.length) {
+        sec.push(
+          `<div class="pt-cal-panel-sec"><h4><i class="fas fa-calendar-check" style="margin-left:6px"></i>متابعة في هذا اليوم (${follow.length})</h4>${follow
+            .map(
+              (i) => `<div class="pt-cal-panel-row"><span>${esc(i.title)}<span class="pt-mini">${esc(i.status)} — ${esc(i.agency || '')}</span></span><button type="button" class="pt-btn-primary" style="padding:6px 10px;font-size:0.75rem;flex-shrink:0" data-pt-cal-open-case="${escAttr(i.id)}">فتح</button></div>`
+            )
+            .join('')}</div>`
+        );
+      }
+      if (caseOnly.length) {
+        sec.push(
+          `<div class="pt-cal-panel-sec"><h4><i class="fas fa-file-alt" style="margin-left:6px"></i>معاملات سُجّل تاريخها هنا (${caseOnly.length})</h4>${caseOnly
+            .map(
+              (i) => `<div class="pt-cal-panel-row"><span>${esc(i.title)}<span class="pt-mini">متابعة: ${prettyDate(i.followUp)}</span></span><button type="button" class="pt-btn-primary" style="padding:6px 10px;font-size:0.75rem;flex-shrink:0" data-pt-cal-open-case="${escAttr(i.id)}">فتح</button></div>`
+            )
+            .join('')}</div>`
+        );
+      }
+      if (tasks.length) {
+        sec.push(
+          `<div class="pt-cal-panel-sec"><h4><i class="fas fa-tasks" style="margin-left:6px"></i>مهام الجدول (${tasks.length})</h4>${tasks
+            .map(
+              (t) => `<div class="pt-cal-panel-row"><span>${esc(t.title)}<span class="pt-mini">${esc(t.status || '')} — ${esc(t.priority || '')}</span></span><button type="button" class="pt-btn-primary" style="padding:6px 10px;font-size:0.75rem;flex-shrink:0" data-pt-cal-open-task="${escAttr(t.id)}">تعديل</button></div>`
+            )
+            .join('')}</div>`
+        );
+      }
+      if (daily.length) {
+        sec.push(
+          `<div class="pt-cal-panel-sec"><h4><i class="fas fa-list-ul" style="margin-left:6px"></i>قائمتي لهذا اليوم (${daily.length})</h4>${daily
+            .map((it) => `<div class="pt-cal-panel-row"><span>${esc(it.text)}${it.done ? '<span class="pt-mini">(منجز)</span>' : ''}</span></div>`)
+            .join('')}</div>`
+        );
+      }
+      if (quick.length) {
+        sec.push(
+          `<div class="pt-cal-panel-sec"><h4><i class="fas fa-bolt" style="margin-left:6px"></i>مهام سريعة اليوم (${quick.length})</h4>${quick
+            .map((it) => `<div class="pt-cal-panel-row"><span>${esc(it.text)}</span></div>`)
+            .join('')}</div>`
+        );
+      }
+
+      body.innerHTML = sec.length ? sec.join('') : '<p class="pt-empty-soft">لا توجد عناصر مرتبطة بهذا اليوم.</p>';
+      panel.classList.add('is-open');
+      panel.removeAttribute('aria-hidden');
+
+      body.querySelectorAll('[data-pt-cal-open-case]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const id = b.getAttribute('data-pt-cal-open-case');
+          const navBtn = document.querySelector('.pt-nav-item[data-pt-page="transactions"]');
+          ptShowPage('transactions', navBtn);
+          const item = state.payload.items.find((x) => x.id === id);
+          if (item) openModal(item);
+        });
+      });
+      body.querySelectorAll('[data-pt-cal-open-task]').forEach((b) => {
+        b.addEventListener('click', () => {
+          const id = b.getAttribute('data-pt-cal-open-task');
+          const navBtn = document.querySelector('.pt-nav-item[data-pt-page="tasks"]');
+          ptShowPage('tasks', navBtn);
+          openStTaskModal(id);
+        });
+      });
+    }
+
+    function ptRenderShellCalendar() {
+      const grid = document.getElementById('ptShellCalGrid');
+      const labelGr = document.getElementById('ptShellCalLabelGr');
+      const labelHj = document.getElementById('ptShellCalLabelHj');
+      const monthPick = document.getElementById('ptShellCalMonthPick');
+      const hint = document.getElementById('ptShellCalHint');
+      if (!grid || !labelGr) return;
+      const year = ptShellCalView.getFullYear();
+      const month = ptShellCalView.getMonth();
+      const prefMo = `${year}-${String(month + 1).padStart(2, '0')}`;
+      if (ptCalSelectedIso && !ptCalSelectedIso.startsWith(prefMo)) {
+        ptCalSelectedIso = null;
+        const p = document.getElementById('ptCalDayPanel');
+        if (p) {
+          p.classList.remove('is-open');
+          p.setAttribute('aria-hidden', 'true');
+        }
+      }
+      if (monthPick) monthPick.value = `${year}-${String(month + 1).padStart(2, '0')}`;
+      const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+      labelGr.textContent = `${monthNames[month]} ${year}`;
+      if (labelHj) {
+        const hj = ptHijriMonthYearLine(new Date(year, month, 1));
+        labelHj.textContent = hj || '';
+        labelHj.style.display = hj ? 'block' : 'none';
+      }
+      const metrics = ptCalMetricsForMonth(year, month);
+      const firstDow = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const todayStr = today(0);
+      const heads = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+      let html = heads.map((h) => `<div class="pt-cal-h">${h}</div>`).join('');
+      for (let i = 0; i < firstDow; i += 1) html += '<div></div>';
+      for (let d = 1; d <= daysInMonth; d += 1) {
+        const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const m = metrics[ds] || ptCalEmptyMetric();
+        const busy = m.follow.length + m.caseHits.length + m.tasks.length + m.dailyItems.length + m.quickN > 0;
+        const cls = ['pt-cal-day'];
+        if (busy) cls.push('has-activity');
+        if (ds === todayStr) cls.push('today');
+        if (ptCalSelectedIso && ds === ptCalSelectedIso) cls.push('is-selected');
+        const hjD = ptHijriDayNumberOnly(ds);
+        const badges = ptCalBadgeHtml(m);
+        const aria = `${ds}${busy ? ' — يوم به نشاط' : ''}`;
+        html += `<button type="button" class="${cls.join(' ')}" data-date="${ds}" title="${esc(aria)}" aria-label="${esc(aria)}">
+          <span class="pt-cal-gh">${d}</span>
+          ${hjD ? `<span class="pt-cal-hj">${hjD} هـ</span>` : ''}
+          ${badges}
+        </button>`;
+      }
+      grid.innerHTML = html;
+      if (hint) {
+        const n = Object.keys(metrics).filter((k) => {
+          const mm = metrics[k];
+          return mm.follow.length + mm.caseHits.length + mm.tasks.length + mm.dailyItems.length + mm.quickN > 0;
+        }).length;
+        hint.textContent = n ? `هذا الشهر: ${n} يومًا بها نشاط موثّق.` : 'لا يوجد نشاط موثّق في هذا الشهر.';
+      }
+    }
+
+    function bindBottomNav() {
+      const nav = document.querySelector('.bottom-nav');
+      if (!nav) return;
+      nav.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-target]');
+        if (!btn) return;
+        const target = btn.dataset.target;
+        const y = target === 'top'
+          ? 0
+          : target === 'cases'
+            ? document.querySelector('.panel')?.offsetTop || 0
+            : target === 'reports'
+              ? document.querySelector('.grid-cards')?.offsetTop || 0
+              : document.querySelector('.toolbar')?.offsetTop || 0;
+        window.scrollTo({ top: Math.max(0, y - 12), behavior: 'smooth' });
+        [...nav.querySelectorAll('button')].forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+      });
+    }
+
+    function applyTheme(mode) {
+      document.body.classList.toggle('dark', mode === 'dark');
+      document.querySelector('#themeBtn').textContent = mode === 'dark' ? 'وضع فاتح' : 'وضع داكن';
+    }
+
+    function syncReminderButtonLabel() {
+      const b = document.querySelector('#reminderNotifBtn');
+      if (!b) return;
+      if (!('Notification' in window)) {
+        b.textContent = '🔕 لا يدعم المتصفح التنبيهات';
+        return;
+      }
+      if (Notification.permission === 'granted') b.textContent = '🔔 تنبيهات المتابعة ✓';
+      else if (Notification.permission === 'denied') b.textContent = '🔕 تنبيهات (مرفوضة من المتصفح)';
+      else b.textContent = '🔔 تنبيهات المتابعة';
+    }
+
+    function scanFollowUpReminders() {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      const t = today(0);
+      const tm = today(1);
+      const open = (state.payload.items || []).filter((x) => !x.archivedAt && x.status !== 'مكتملة');
+      const overdue = open.filter((x) => x.followUp && x.followUp < t);
+      const dueToday = open.filter((x) => x.followUp === t);
+      const dueTm = open.filter((x) => x.followUp === tm);
+      if (!overdue.length && !dueToday.length && !dueTm.length) return;
+      const last = Number(localStorage.getItem(REMINDER_LAST_MS) || 0);
+      if (Date.now() - last < 6 * 3600000) return;
+      const parts = [];
+      if (overdue.length) parts.push(`متأخرة: ${overdue.length}`);
+      if (dueToday.length) parts.push(`اليوم: ${dueToday.length}`);
+      if (dueTm.length) parts.push(`غداً: ${dueTm.length}`);
+      try {
+        new Notification('متابعات Personal Tracker', { body: parts.join(' — '), tag: 'pt-followups' });
+        localStorage.setItem(REMINDER_LAST_MS, String(Date.now()));
+      } catch {}
+    }
+
+    function setSync(msg) {
+      text('#syncInfo', msg);
+      setTimeout(() => text('#syncInfo', `آخر تحديث: ${new Date().toLocaleTimeString('ar-SA')}`), 1600);
+    }
+
+    function renderTodayBadge() {
+      const el = document.querySelector('#todayBadge span:last-child');
+      if (!el) return;
+      const formatted = new Intl.DateTimeFormat('ar-SA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+      el.textContent = formatted;
+    }
+
+
+    function download(name, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function uid() {
+      return (crypto.randomUUID && crypto.randomUUID()) || `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    }
+    function now() { return new Date().toISOString(); }
+    function today(offset) {
+      const d = new Date();
+      d.setDate(d.getDate() + offset);
+      return d.toISOString().slice(0, 10);
+    }
+    function stamp() { return new Date().toISOString().slice(0, 10); }
+    function str(v) { return typeof v === 'string' ? v.trim() : ''; }
+    function esc(v) {
+      return String(v || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+    function escAttr(v) {
+      return esc(v).replaceAll('`', '&#096;');
+    }
+    function on(sel, evt, fn) { document.querySelector(sel).addEventListener(evt, fn); }
+    function value(sel) { return document.querySelector(sel).value; }
+    function fill(sel, v) { document.querySelector(sel).value = v; }
+    function text(sel, v) { document.querySelector(sel).textContent = v; }
+
+    // Disable legacy service worker to prevent stale cached UI/script mismatch.
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map((r) => r.unregister()));
+        } catch {}
+        if ('caches' in window) {
+          try {
+            const keys = await caches.keys();
+            await Promise.all(keys.map((k) => caches.delete(k)));
+          } catch {}
+        }
+      });
+    }
+  </script>
+</body>
+</html>
