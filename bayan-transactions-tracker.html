@@ -255,6 +255,12 @@
       border-color: transparent;
     }
 
+    .btn.danger-soft {
+      background: rgba(150, 56, 72, 0.22);
+      color: #ffd0d7;
+      border-color: rgba(242, 158, 170, 0.45);
+    }
+
     .grid-cards {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -1900,6 +1906,7 @@
         <button class="btn" id="printBtn" type="button">طباعة القائمة</button>
         <button class="btn" id="responsibleReportBtn" type="button">تقرير مسؤول</button>
         <button class="btn" id="importBtn" type="button">استيراد</button>
+        <button type="button" class="btn danger-soft" id="resetWorkspaceBtn" title="حذف كل المعاملات وجميع أنواع المهام محليًا وسحابيًا (بدون مسح كلمات المرور المخزّنة)">بدء عمل فعلي — مسح التجربة</button>
         <button class="btn" id="cloudRestoreBtn" type="button">استرجاع سحابي</button>
         <button class="btn" id="setPinBtn" type="button">رمز الحماية</button>
         <button class="btn" id="undoBtn" type="button">تراجع</button>
@@ -2319,6 +2326,12 @@
         renderActionRows();
       });
       on('#importBtn', 'click', () => document.querySelector('#importFile').click());
+      on('#resetWorkspaceBtn', 'click', () => {
+        performOperationalReset().catch((err) => {
+          console.error(err);
+          alert('تعذر إتمام عملية المسح.');
+        });
+      });
       on('#undoBtn', 'click', undo);
       on('#themeBtn', 'click', toggleTheme);
       on('#searchInput', 'input', render);
@@ -2531,6 +2544,50 @@
       if (!applyingRemote) scheduleCloudPush(reason);
       render();
       setSync(cloudReady ? 'تم الحفظ محليًا + سحابيًا' : 'تم الحفظ محليًا بنجاح');
+    }
+
+    async function performOperationalReset() {
+      if (localStorage.getItem(SECURITY_PIN) && !verifyPin('مسح المعاملات وكل المهام لبدء العمل الفعلي')) return;
+      if (
+        !confirm(
+          'هذه العملية لا يُلغيها زر «تراجع» القديم لهذه النسخة.\n\n' +
+            'سيُحذف: كل المعاملات؛ قوائم «مهام اليوم» (كل الأيام)؛ «المهام السريعة»؛ ومهام «جدول المهام» في الصفحة المخصّصة.\n\n' +
+            'سيُحتفظ بـ: رمز الحماية، كلمات المرور المحفوظة في لوحة الجدولة، والمظهر (فاتح/داكن).\n\n' +
+            'نوصي بالضغط أولًا على «تصدير كل البيانات (JSON)» كنسخة احتياطية.\n\nهل تريد المتابعة؟'
+        )
+      ) {
+        return;
+      }
+      if (String(prompt('لتأكيد الحذف اكتب بالضبط: بدء', '') || '').trim() !== 'بدء') {
+        alert('تم الإلغاء.');
+        return;
+      }
+      undoSnapshot = null;
+      try {
+        const snap = collectShellSnapshot();
+        applyShellSnapshot({
+          dailyTodos: {},
+          quickTodos: { items: [] },
+          sidebarTasks: { items: [] },
+          theme: snap.theme || 'dark',
+          passwords: snap.passwords,
+          securityPin: snap.securityPin
+        });
+        state.payload.items = [];
+        state.meta.updatedAt = now();
+        state.meta.revision = Number(state.meta.revision || 1) + 1;
+        state.meta.source = 'operational_reset';
+        localStorage.setItem(STORE, JSON.stringify(state));
+        safeAutoBackup('operational_reset');
+        render();
+        setSync(cloudReady && cloudInitialized ? 'جاري رفع قائمة فارغة للسحابة…' : 'تم المحو محليًا');
+        if (cloudReady && cloudDocRef && cloudInitialized && !applyingRemote) await pushCloud('operational_reset');
+        setSync(cloudReady && cloudInitialized ? 'تم مسح المعاملات والمهام وحفظها في السحابة' : 'تم مسح المعاملات والمهام محليًا');
+        ptRefreshShell();
+      } catch (e) {
+        console.error(e);
+        alert('تعذّر إكمال المسح. جرّب مرة أخرى؛ أو صدّر نسخة JSON قبل إعادة المحاولة.');
+      }
     }
 
     function cloudConfigured() {
