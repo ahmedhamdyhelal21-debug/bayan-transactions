@@ -1517,6 +1517,28 @@
       transition: width 0.35s ease;
     }
     .pt-home-storage-card .pt-storage-text { margin: 0; font-size: 0.82rem; line-height: 1.5; color: #a8b5cc !important; }
+    .pt-sync-explainer {
+      margin: 0 0 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(26, 168, 214, 0.08);
+      border: 1px solid rgba(77, 169, 227, 0.28);
+      color: #dce8f9;
+    }
+    .pt-sync-explainer summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.88rem;
+      list-style-position: outside;
+    }
+    .pt-sync-explainer-body {
+      margin-top: 8px;
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: #b9c9e8;
+    }
+    .pt-sync-explainer-body p { margin: 0 0 8px; }
+    .pt-sync-explainer-body p:last-child { margin-bottom: 0; }
     .pt-rep-print-bar {
       display: flex;
       flex-wrap: wrap;
@@ -1687,12 +1709,13 @@
           <div class="pt-card-head"><i class="fas fa-database" style="margin-left:8px"></i> التخزين المحلي (التطبيق بالكامل)</div>
           <div class="pt-card-body">
             <p class="pt-header-sub" style="margin:0 0 12px">تقدير لحجم البيانات المحفوظة في هذا المتصفح: معاملات، مهام، قوائم يومية، كلمات مرور، وغيرها — مقارنةً بحد تقريبي 5 ميجابايت لـ localStorage في أغلب المتصفحات.</p>
-            <p class="pt-header-sub pt-sync-explainer" style="margin:0 0 12px;padding:10px 12px;border-radius:10px;background:rgba(26,168,214,0.12);border:1px solid rgba(77,169,227,0.35);line-height:1.55;color:#dce8f9">
-              <strong>لماذا يختلف ظهور البيانات بين الكمبيوتر والموبايل؟</strong>
-              كل مكان من هنا («كروم مقابل إيدج»، أو المتصفّح مقابل الأيقونة المثبَّتة، أو الجوال) له <strong>نسخته المحلية</strong> لهذا المتصفّح وحده؛ أثناء تشغّين الموقع أيضاً تُفعَّل محاولة <strong>مزامنتها مع Firebase</strong>، فقد تأخُذ ثواني أو يبقى عند نقطة قديمة إن لم يكتمل الرفع أو الاتصال.
-              إذا مسحتم المعاملات من جهاز وفُتح الموقع من جهاز أو متصفّح آخر وفترضتم النسختين متطابقتَين: تأكدوا أن الجميع متصل؛ حدّثوا الصفحة؛ أو نظّفوا بيانات الموقع لتلك الواجهة؛ أو استخدموا «بدء عمل فعلي — مسح التجربة» من الجهاز الذي لم يتلقَّ التحديث بعد.
-              نقل كل شيء يدوياً ممكن أيضاً من <strong>تصدير JSON</strong> على مصدركم ثم <strong>استيراد JSON</strong> بالخيار «استبدال» على الآخرين.
-            </p>
+            <details class="pt-sync-explainer">
+              <summary>لماذا قد تختلف البيانات بين الأجهزة أو المتصفّحات؟</summary>
+              <div class="pt-sync-explainer-body">
+                <p>كل متصفّح أو أيقونة مثبَّتة (كروم ≠ إيدج، كمبيوتر ≠ جوال) له <strong>تخزين محلي</strong> خاص؛ المزامنة مع السحابة تحتاج اتصالاً وقد تتأخر ثوانٍ.</p>
+                <p>إن لاحظتم فرقاً: حدّثوا الصفحة، أو نظّفوا بيانات الموقع لتلك الواجهة، أو استخدموا «بدء عمل فعلي» من الجهاز المتأخر، أو <strong>تصدير JSON</strong> ثم <strong>استيراد</strong> بخيار الاستبدال.</p>
+              </div>
+            </details>
             <div class="pt-storage-bar-track" aria-hidden="true"><div class="pt-storage-bar-fill" id="ptHomeStorageBar"></div></div>
             <p id="ptHomeStorageText" class="pt-storage-text">…</p>
           </div>
@@ -2269,6 +2292,7 @@
     let cloudInitialized = false;
     let applyingRemote = false;
     let cloudPushTimer = null;
+    let syncInfoIdleTimer = null;
     let ptShellNavBound = false;
     let ptShellCalView = new Date();
     let ptCalSelectedIso = null;
@@ -2697,16 +2721,18 @@
             safeAutoBackup('cloud_pull_merge');
             render();
           }
-          const incomingShellRev = Number(data.shellRevision ?? 0);
-          const localShellRev = Number(localStorage.getItem('ptp.shellRev.v1') || 0);
-          if (data.shell && typeof data.shell === 'object' && incomingShellRev > localShellRev) {
+          const shellRevIncoming = Number(data.shellRevision ?? 0);
+          const shellRevLocal = Number(localStorage.getItem('ptp.shellRev.v1') || 0);
+          let shellApplied = false;
+          if (data.shell && typeof data.shell === 'object' && shellRevIncoming > shellRevLocal) {
             applyShellSnapshot(normalizeImportedShell(data.shell));
-            localStorage.setItem('ptp.shellRev.v1', String(incomingShellRev));
+            localStorage.setItem('ptp.shellRev.v1', String(shellRevIncoming));
+            shellApplied = true;
           }
           applyingRemote = false;
           cloudInitialized = true;
           if (!sameState) scheduleCloudPush('cloud_merge_sync');
-          setSync('تمت مزامنة أحدث بيانات من السحابة');
+          if (!sameState || shellApplied) setSync('تمت مزامنة أحدث بيانات من السحابة');
         }, (err) => {
           console.error(err);
           setSync('تعذر المزامنة السحابية - تأكد من إعدادات Firebase');
@@ -2714,7 +2740,7 @@
 
         cloudReady = true;
         // Wait until first snapshot to avoid overriding cloud data with stale local data.
-        setSync('المزامنة السحابية مفعلة (المعاملات + المهام اليومية/السريعة/الجدول/كلمات المرور عند التعديل)');
+        setSync('المزامنة السحابية: جاهزة');
       } catch (err) {
         console.error(err);
         setSync('فشل تفعيل المزامنة السحابية');
@@ -4888,8 +4914,15 @@
     }
 
     function setSync(msg) {
-      text('#syncInfo', msg);
-      setTimeout(() => text('#syncInfo', `آخر تحديث: ${new Date().toLocaleTimeString('ar-SA')}`), 1600);
+      const el = document.querySelector('#syncInfo');
+      if (!el) return;
+      try {
+        clearTimeout(syncInfoIdleTimer);
+      } catch {}
+      el.textContent = msg;
+      syncInfoIdleTimer = setTimeout(() => {
+        el.textContent = `آخر تحديث: ${new Date().toLocaleTimeString('ar-SA')}`;
+      }, 2200);
     }
 
     function renderTodayBadge() {
